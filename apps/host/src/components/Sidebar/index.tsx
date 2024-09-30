@@ -1,13 +1,7 @@
-import {
-  Bell,
-  LineChart,
-  MessagesSquare,
-  Package2,
-  Users,
-} from "lucide-react";
+import { NavLink } from 'react-router-dom'
+import { Bell, MessagesSquare, Package2, Users } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
-import SidebarItem from "./SidebarItem";
+import { Button } from '@/components/ui/button'
 
 const Sidebar = () => {
   return (
@@ -24,21 +18,34 @@ const Sidebar = () => {
       </div>
       <div className="flex-1">
         <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-          <a
-            href="#"
-            className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+          <NavLink
+            to="/messaging"
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${
+                isActive ? 'bg-muted' : ''
+              }`
+            }
           >
             <MessagesSquare className="h-4 w-4" />
             Messages
-          </a>
-          <SidebarItem icon={<MessagesSquare className="h-4 w-4" />} label="Messages" />
-          <SidebarItem icon={<Users className="h-4 w-4" />} label="Customers" />
-          <SidebarItem icon={<LineChart className="h-4 w-4" />} label="Analytics" />
+          </NavLink>
+        </nav>
+        <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+          <NavLink
+            to="/customers"
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:text-primary ${
+                isActive ? 'bg-muted' : ''
+              }`
+            }
+          >
+            <Users className="h-4 w-4" />
+            Customers
+          </NavLink>
         </nav>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Sidebar;
-
+export default Sidebar

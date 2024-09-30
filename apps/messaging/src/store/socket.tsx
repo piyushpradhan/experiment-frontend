@@ -54,6 +54,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       channelId: string
     }) => {
       if (data.channelId === null) return
+      console.log(data.channelId, activeChannel)
       dispatch(
         setChannelMessages(
           data.messages,
@@ -88,7 +89,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(true)
       socket.emit('loadMoreMessages', {
         channelId: activeChannel,
-        offset,
+        offset: offset.current,
         limit,
       })
       offset.current = offset.current + limit

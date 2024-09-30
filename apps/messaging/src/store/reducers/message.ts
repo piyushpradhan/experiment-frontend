@@ -40,6 +40,8 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
         ? {}
         : { ...state }
 
+      console.log({ isSwitching: payload.isSwitchingChannels })
+
       messages.map((message) => {
         messagesById[message.id] = {
           id: message.id,
@@ -50,6 +52,8 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
           taggedMessage: message.tagged_message,
         }
       })
+
+      console.log({ messages })
 
       return messagesById
     }

@@ -8,6 +8,7 @@ import type {
 } from '@messaging/types'
 import { combineReducers } from '@reduxjs/toolkit'
 import { SetChannelMessagesPayload } from '../../store/actions/types'
+import { findLatestTimestamp } from '@messaging/lib/utils'
 
 const activeChannel = (
   state: Pick<ChannelState, 'activeChannel'> | null = null,
@@ -42,6 +43,7 @@ const byId = (state: ChannelsById = {}, action: Action<string, unknown>) => {
       const channels: ChannelSocketResponse[] = (action.payload ||
         []) as ChannelSocketResponse[]
       const channelsById: ChannelsById = {}
+
       channels.map((channel) => {
         channelsById[channel.id] = {
           id: channel.id,
@@ -51,6 +53,7 @@ const byId = (state: ChannelsById = {}, action: Action<string, unknown>) => {
           lastMessage: channel.last_message,
         }
       })
+
       return channelsById
     }
     case atypes.SET_CHANNEL_MESSAGES: {
@@ -58,19 +61,32 @@ const byId = (state: ChannelsById = {}, action: Action<string, unknown>) => {
 
       if (!payload.messages || !payload.channelId) return state
 
-      const lastChannelMessage: MessageSocketResponse = payload.messages[
-        payload.messages.length - 1
-      ] as MessageSocketResponse
+      const lastChannelMessage: MessageSocketResponse = payload
+        .messages[0] as MessageSocketResponse
       const lastMessage =
         payload.messages.length > 0 ? lastChannelMessage.contents : null
-      const lastUpdated =
+      const lastMessageUpdatedAt =
         payload.messages.length > 0 ? lastChannelMessage.timestamp : null
+
+      const currentUpdatedAt = new Date(
+        state[payload.channelId].updatedAt
+      ).toISOString()
+
+      const lastUpdated = lastMessageUpdatedAt
+        ? findLatestTimestamp([
+            new Date(lastMessageUpdatedAt).toISOString(),
+            currentUpdatedAt,
+          ])
+        : currentUpdatedAt
 
       return {
         ...state,
         [payload.channelId]: {
           ...state[payload.channelId],
-          lastMessage,
+          lastMessage:
+            lastUpdated === currentUpdatedAt
+              ? state[payload.channelId].lastMessage
+              : lastMessage,
           updatedAt: lastUpdated,
         },
       }

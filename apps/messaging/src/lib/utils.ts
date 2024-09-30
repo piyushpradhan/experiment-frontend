@@ -28,3 +28,9 @@ export function messageTimestampComparator(
   if (messageA.timestamp > messageB.timestamp) return 1
   return 0
 }
+
+export function findLatestTimestamp(timestamps: string[]) {
+  return new Date(
+    Math.max(...timestamps.map((ts) => Date.parse(ts)))
+  ).toISOString()
+}

@@ -5,14 +5,15 @@ import { getChannelDetails, getActiveChannel } from '@messaging/store/selectors'
 
 import type { Channel, AppState } from '@messaging/types'
 import ChannelDropdown from './ChannelDropdown'
+import { useSocket } from '@messaging/store/hooks'
 
 type Props = {
   channelId: string
-  joinChannel: (channelId: string) => void
 }
 
-const Channel = ({ channelId, joinChannel }: Props) => {
+const Channel = ({ channelId }: Props) => {
   const dispatch = useDispatch()
+  const { joinChannel } = useSocket()
   const channel = useSelector((state: AppState) =>
     getChannelDetails(state, channelId)
   )
