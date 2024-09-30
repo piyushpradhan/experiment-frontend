@@ -8,13 +8,11 @@ import type {
 export const setChannelMessages = (
   messages: MessageSocketResponse[],
   channelId: string,
-  isSwitchingChannels: boolean = false
 ): Action<string, SetChannelMessagesPayload> => ({
   type: atypes.SET_CHANNEL_MESSAGES,
   payload: {
     messages,
     channelId,
-    isSwitchingChannels,
   },
 })
 
@@ -25,4 +23,15 @@ export const tagMessage = (
   payload: {
     messageId,
   },
+})
+
+export const loadMoreMessages = (
+  messages: MessageSocketResponse[],
+  channelId: string
+): Action<string, SetChannelMessagesPayload> => ({
+  type: atypes.LOAD_MORE_MESSAGES,
+  payload: {
+    messages,
+    channelId
+  }
 })

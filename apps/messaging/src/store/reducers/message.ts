@@ -28,7 +28,7 @@ const taggedMessage = (
 
 const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
   switch (action.type) {
-    case atypes.SET_CHANNEL_MESSAGES: {
+    case atypes.LOAD_MORE_MESSAGES: {
       const { payload }: Action<string, SetChannelMessagesPayload> =
         action as Action<string, SetChannelMessagesPayload>
 
@@ -36,11 +36,7 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
 
       const messages: MessageSocketResponse[] = (payload.messages ||
         []) as MessageSocketResponse[]
-      const messagesById: MessagesById = payload.isSwitchingChannels
-        ? {}
-        : { ...state }
-
-      console.log({ isSwitching: payload.isSwitchingChannels })
+      const messagesById: MessagesById = { ...state };
 
       messages.map((message) => {
         messagesById[message.id] = {
@@ -53,10 +49,33 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
         }
       })
 
-      console.log({ messages })
+      return messagesById
+    }
+    case atypes.SET_CHANNEL_MESSAGES: {
+      const { payload }: Action<string, SetChannelMessagesPayload> =
+        action as Action<string, SetChannelMessagesPayload>
+
+      if (!payload.messages) return state
+
+      const messages: MessageSocketResponse[] = (payload.messages ||
+        []) as MessageSocketResponse[]
+      const messagesById: MessagesById = {};
+
+      messages.map((message) => {
+        messagesById[message.id] = {
+          id: message.id,
+          sender: message.sender,
+          contents: message.contents,
+          timestamp: message.timestamp,
+          channelId: message.channel_id,
+          taggedMessage: message.tagged_message,
+        }
+      })
 
       return messagesById
     }
+    case atypes.SET_ACTIVE_CHANNEL:
+
     default:
       return state
   }

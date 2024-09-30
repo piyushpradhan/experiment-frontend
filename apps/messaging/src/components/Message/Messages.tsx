@@ -33,6 +33,12 @@ const Messages = () => {
     }
   }, [messages])
 
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight
+    }
+  }, [activeChannel]);
+
   const handleScroll = () => {
     if (messageContainerRef.current) {
       const { scrollTop, clientHeight, scrollHeight } =

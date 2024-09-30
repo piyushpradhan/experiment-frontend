@@ -3,7 +3,6 @@ import { MessageSocketResponse, User } from '@messaging/types'
 export type SetChannelMessagesPayload = {
   messages: MessageSocketResponse[]
   channelId: string
-  isSwitchingChannels: boolean
 }
 
 export type TagMessagePayload = {

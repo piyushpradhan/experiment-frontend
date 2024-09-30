@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { setChannels } from '../store/actions'
+import { loadMoreMessages as loadMoreMessagesAction, setChannels } from '../store/actions'
 
 import type { AppState, Channel, MessageSocketResponse } from '@messaging/types'
 import { setChannelMessages } from './actions/message'
@@ -16,6 +16,7 @@ import { getSocket } from './utils'
 import { Socket } from 'socket.io-client'
 import { useSelector } from 'react-redux'
 import { getActiveChannel } from './selectors'
+import { channel } from 'diagnostics_channel'
 
 interface SocketContextProps {
   isLoading: boolean
@@ -66,8 +67,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       dispatch(
         setChannelMessages(
           data.messages,
-          data.channelId,
-          data.channelId !== activeChannel
+          data.channelId
         )
       )
 
@@ -85,17 +85,27 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       dispatch(setChannels(data))
     }
 
+    const handleMoreChannelMessages = (data: { messages: MessageSocketResponse[], channelId: string }) => {
+      if (data.channelId === null) return;
+
+      dispatch(
+        loadMoreMessagesAction(data.messages, data.channelId)
+      )
+    }
+
     socket.on('connect', () => {
       socket.emit('join')
     })
 
     socket.on('channelMessages', handleChannelMessages)
     socket.on('channels', handleChannels)
+    socket.on('moreChannelMessages', handleMoreChannelMessages);
 
     return () => {
       socket.off('channels')
       socket.off('message')
       socket.off('channelMessages')
+      socket.off('moreChannelMessages')
     }
   }, [activeChannel])
 
