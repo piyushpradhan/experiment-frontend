@@ -41,12 +41,20 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const socket = getSocket()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
+  const [hasMoreMessages, setHasMoreMessages] = useState(true)
   const offset = useRef<number>(0)
-  const limit = 10 // batch size
+  const initialChannelLoad = useRef<boolean>(true)
+  const limit = 30 // batch size
 
   const activeChannel = useSelector((state: AppState) =>
     getActiveChannel(state)
   )
+
+  useEffect(() => {
+    setHasMoreMessages(true)
+    offset.current = 0
+    initialChannelLoad.current = true
+  }, [activeChannel])
 
   useEffect(() => {
     const handleChannelMessages = (data: {
@@ -54,7 +62,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       channelId: string
     }) => {
       if (data.channelId === null) return
-      console.log(data.channelId, activeChannel)
+
       dispatch(
         setChannelMessages(
           data.messages,
@@ -62,6 +70,15 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
           data.channelId !== activeChannel
         )
       )
+
+      if (
+        data.channelId === activeChannel &&
+        data.messages.length > 0 &&
+        initialChannelLoad.current
+      ) {
+        offset.current += limit
+        initialChannelLoad.current = false
+      }
     }
 
     const handleChannels = (data: Channel[]) => {
@@ -84,7 +101,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const loadMoreMessages = useCallback(() => {
     try {
-      if (loading) return
+      if (loading || !hasMoreMessages) return
 
       setLoading(true)
       socket.emit('loadMoreMessages', {
@@ -92,7 +109,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         offset: offset.current,
         limit,
       })
-      offset.current = offset.current + limit
 
       setLoading(false)
     } catch (err) {
