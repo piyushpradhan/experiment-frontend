@@ -16,7 +16,6 @@ import { getSocket } from './utils'
 import { Socket } from 'socket.io-client'
 import { useSelector } from 'react-redux'
 import { getActiveChannel } from './selectors'
-import { channel } from 'diagnostics_channel'
 
 interface SocketContextProps {
   isLoading: boolean
