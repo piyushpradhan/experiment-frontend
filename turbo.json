@@ -1,5 +1,8 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "globalEnv": [
+    "VITE_BACKEND_URL"
+  ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
