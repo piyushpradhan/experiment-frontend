@@ -74,9 +74,9 @@ const byId = (state: ChannelsById = {}, action: Action<string, unknown>) => {
 
       const lastUpdated = lastMessageUpdatedAt
         ? findLatestTimestamp([
-            new Date(lastMessageUpdatedAt).toISOString(),
-            currentUpdatedAt,
-          ])
+          new Date(lastMessageUpdatedAt).toISOString(),
+          currentUpdatedAt,
+        ])
         : currentUpdatedAt
 
       return {
