@@ -14,7 +14,7 @@ const MessageAuthor = ({ isOwnMessage, uid }: Props) => {
 
   if (isOwnMessage || uid === 'null') return null
 
-  return <p className="text-xs text-muted-foreground">{user.name}</p>
+  return <p className="text-xs text-muted-foreground">{user?.name}</p>
 }
 
 export default MessageAuthor
