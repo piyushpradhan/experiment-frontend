@@ -35,7 +35,7 @@ const Messaging = () => {
   }, [channels])
 
   return (
-    <main className="flex flex-col gap-4 p-4 lg:gap-6 lg:p-6 h-screen max-h-screen overflow-hidden">
+    <main className="flex flex-col gap-4 p-4 lg:gap-6 lg:p-6 h-full overflow-hidden">
       <div
         className="grid grid-cols-5 lg:grid-cols-6 2xl:grid-cols-9 gap-4 rounded-lg w-full h-full overflow-hidden"
         x-chunk="dashboard-02-chunk-1"

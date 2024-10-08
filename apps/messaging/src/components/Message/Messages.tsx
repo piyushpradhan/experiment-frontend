@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import MessageComponent from '@messaging/components/Message/ChatBlock'
@@ -23,7 +23,10 @@ const Messages = () => {
     getActiveChannel(state)
   )
 
-  const messages = Object.values(messagesById).sort(messageTimestampComparator)
+  const messages = useMemo(
+    () => Object.values(messagesById).sort(messageTimestampComparator),
+    [messagesById]
+  )
 
   // Scroll to the bottom on initial load
   useEffect(() => {
@@ -35,11 +38,12 @@ const Messages = () => {
 
   useEffect(() => {
     if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight
     }
-  }, [activeChannel]);
+  }, [activeChannel])
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (messageContainerRef.current) {
       const { scrollTop, clientHeight, scrollHeight } =
         messageContainerRef.current
@@ -53,7 +57,7 @@ const Messages = () => {
         loadMoreMessages(activeChannel)
       }
     }
-  }
+  }, [loadMoreMessages, activeChannel])
 
   useEffect(() => {
     const container = messageContainerRef.current
@@ -61,7 +65,7 @@ const Messages = () => {
       container.addEventListener('scroll', handleScroll)
       return () => container.removeEventListener('scroll', handleScroll)
     }
-  }, [isLoading, activeChannel])
+  }, [isLoading, activeChannel, handleScroll])
 
   return (
     <div

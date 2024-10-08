@@ -42,11 +42,13 @@ const userCreationForm = z.object({
   }),
 })
 
+type UserCreationForm = z.infer<typeof userCreationForm>
+
 const JoinModal = () => {
   const dispatch = useDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const form = useForm<z.infer<typeof userCreationForm>>({
+  const form = useForm<UserCreationForm>({
     resolver: zodResolver(userCreationForm),
     defaultValues: {
       name: '',
@@ -54,18 +56,15 @@ const JoinModal = () => {
     },
   })
 
-  const handleSubmit = useCallback(
-    async (values: z.infer<typeof userCreationForm>) => {
-      dispatch(createUserOptimistic({ name: values.name, email: values.email }))
-      const createdUser: User = await createUser(values.name, values.email)
-      // Update the `active` user
-      dispatch(storeCreatedUser(createdUser))
-      // Update the local storage
-      localStorage.setItem('user', createdUser.uid)
-      setIsModalOpen(false)
-    },
-    []
-  )
+  const handleSubmit = useCallback(async (values: UserCreationForm) => {
+    dispatch(createUserOptimistic(values))
+    const createdUser: User = await createUser(values.name, values.email)
+    // Update the `active` user
+    dispatch(storeCreatedUser(createdUser))
+    // Update the local storage
+    localStorage.setItem('user', createdUser.uid)
+    setIsModalOpen(false)
+  }, [])
 
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false)
