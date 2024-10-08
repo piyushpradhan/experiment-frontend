@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
 import {
   CircleUser,
   Home,
@@ -32,8 +32,9 @@ import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import Sidebar from '@/components/Sidebar'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import Messaging from '@messaging/App'
 
-const Messaging = lazy(() => import('@messaging/App'))
+// const Messaging = lazy(() => import('@messaging/App'))
 
 export function Dashboard() {
   return (
