@@ -29,10 +29,11 @@ const Channel = ({ channelId }: Props) => {
 
   return (
     <div
-      className={`flex flex-col cursor-pointer gap-1 px-3 mx-1 py-2 ${activeChannel === channelId
+      className={`flex flex-col cursor-pointer gap-1 px-3 mx-1 py-2 ${
+        activeChannel === channelId
           ? 'bg-gray-100 border'
           : 'bg-white border border-transparent'
-        } hover:bg-gray-100 rounded-sm`}
+      } hover:bg-gray-100 rounded-sm`}
       onClick={handleJoinChannel}
     >
       <div className="pt-1 flex flex-row justify-between items-center">

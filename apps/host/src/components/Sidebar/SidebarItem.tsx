@@ -1,12 +1,12 @@
-import { ReactNode } from "react"
+import { ReactNode } from 'react'
 
 type Props = {
-  icon: ReactNode,
+  icon: ReactNode
   label: string
 }
 
 const SidebarItem = ({ icon, label }: Props) => {
-  const notSelectedStyles = "text-muted-foreground";
+  const notSelectedStyles = 'text-muted-foreground'
   //const selectedStyles = "bg-muted text-primary";
   return (
     <a
@@ -16,8 +16,7 @@ const SidebarItem = ({ icon, label }: Props) => {
       {icon}
       {label}
     </a>
-
   )
 }
 
-export default SidebarItem;
+export default SidebarItem

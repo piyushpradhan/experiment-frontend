@@ -1,58 +1,58 @@
 export type Message = {
-  id: string;
-  sender: string;
-  contents: string;
-  channelId: string;
-  timestamp: Date;
-  taggedMessage?: string;
+  id: string
+  sender: string
+  contents: string
+  channelId: string
+  timestamp: Date
+  taggedMessage?: string
 }
 
-export type MessageSocketResponse = Omit<Message, "channelId"> & {
-  channel_id: string;
-  tagged_message?: string;
+export type MessageSocketResponse = Omit<Message, 'channelId'> & {
+  channel_id: string
+  tagged_message?: string
 }
 
 export type MessagesById = {
   [messageId: string]: Message
 }
 
-export type TaggedMessage = string | null;
+export type TaggedMessage = string | null
 
 export type MessagesState = {
-  taggedMessage: TaggedMessage;
-  byId: MessagesById;
+  taggedMessage: TaggedMessage
+  byId: MessagesById
   all: string[]
 }
 
 export type ChannelSocketResponse = {
-  id: string;
-  name: string;
-  created_at: string;
-  last_message: string;
-  updated_at: Date;
+  id: string
+  name: string
+  created_at: string
+  last_message: string
+  updated_at: Date
 }
 
 export type Channel = {
-  id: string;
-  name: string;
-  createdAt: string;
-  lastMessage: string;
-  updatedAt: Date;
+  id: string
+  name: string
+  createdAt: string
+  lastMessage: string
+  updatedAt: Date
 }
 
 export type Action<T extends string, P> = {
-  type: T;
+  type: T
   payload: P
 }
 
 export type ChannelsById = {
-  [channelId: string]: Channel;
+  [channelId: string]: Channel
 }
 
 export type ChannelState = {
-  activeChannel: string;
-  byId: ChannelsById;
-  all: string[];
+  activeChannel: string
+  byId: ChannelsById
+  all: string[]
 }
 
 export type TabState = {
@@ -60,25 +60,25 @@ export type TabState = {
 }
 
 export type User = {
-  uid: string;
-  name: string;
-  email: string;
+  uid: string
+  name: string
+  email: string
 }
 
 export type UsersById = {
   [uid: string]: User
 }
 
-export type ActiveUser = string | null;
+export type ActiveUser = string | null
 
 export type UserState = {
-  byId: UsersById,
+  byId: UsersById
   active: ActiveUser
 }
 
 export type AppState = {
-  channel: ChannelState;
-  tab: TabState;
-  message: MessagesState;
-  user: UserState;
+  channel: ChannelState
+  tab: TabState
+  message: MessagesState
+  user: UserState
 }

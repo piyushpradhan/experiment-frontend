@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
 interface SidebarItemProps {
-  icon?: ReactNode;
-  label: string;
+  icon?: ReactNode
+  label: string
 }
 
 export const SidebarItem = ({ icon, label }: SidebarItemProps) => {
-  const notSelectedStyles = "text-muted-foreground";
+  const notSelectedStyles = 'text-muted-foreground'
   //const selectedStyles = "bg-muted text-primary";
 
   return (
