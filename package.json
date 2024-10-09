@@ -23,7 +23,8 @@
     "@changesets/cli": "^2.26.1",
     "@types/node": "^18.16.16",
     "prettier": "^2.8.8",
-    "turbo": "^1.10.1"
+    "turbo": "^1.10.1",
+    "eslint-config-showoff": "workspace:*"
   },
   "packageManager": "pnpm@7.15.0"
 }

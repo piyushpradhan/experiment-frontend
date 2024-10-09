@@ -7,7 +7,7 @@ import type {
 
 export const setChannelMessages = (
   messages: MessageSocketResponse[],
-  channelId: string,
+  channelId: string
 ): Action<string, SetChannelMessagesPayload> => ({
   type: atypes.SET_CHANNEL_MESSAGES,
   payload: {
@@ -32,6 +32,6 @@ export const loadMoreMessages = (
   type: atypes.LOAD_MORE_MESSAGES,
   payload: {
     messages,
-    channelId
-  }
+    channelId,
+  },
 })

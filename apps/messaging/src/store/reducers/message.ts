@@ -36,7 +36,7 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
 
       const messages: MessageSocketResponse[] = (payload.messages ||
         []) as MessageSocketResponse[]
-      const messagesById: MessagesById = { ...state };
+      const messagesById: MessagesById = { ...state }
 
       messages.map((message) => {
         messagesById[message.id] = {
@@ -59,7 +59,7 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
 
       const messages: MessageSocketResponse[] = (payload.messages ||
         []) as MessageSocketResponse[]
-      const messagesById: MessagesById = {};
+      const messagesById: MessagesById = {}
 
       messages.map((message) => {
         messagesById[message.id] = {
