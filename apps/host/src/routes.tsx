@@ -4,6 +4,8 @@ import Home from '@/pages/Home'
 
 // eslint-disable-next-line react-refresh/only-export-components
 const Messaging = lazy(() => import('@messaging/App'))
+// eslint-disable-next-line react-refresh/only-export-components
+const Collaboration = lazy(() => import('@collaboration'))
 
 export const router = createBrowserRouter([
   {
@@ -22,8 +24,8 @@ export const router = createBrowserRouter([
         },
       },
       {
-        path: 'customers',
-        element: <div>Customers</div>,
+        path: 'collaboration',
+        element: <Collaboration />,
         loader: () => {
           return null
         },

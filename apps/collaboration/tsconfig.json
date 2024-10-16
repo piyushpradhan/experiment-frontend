@@ -6,28 +6,21 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    /* shadcnui stuff */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@messaging/*": ["../messaging/src/*"],
-      "@collaboration/*": ["../collaboration/src/*"],
-      "@design-system/*": ["../../packages/design-system/src/*"]
+      "@collaboration/*": ["./src/*"]
     }
   },
   "include": ["src"],
