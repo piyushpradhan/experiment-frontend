@@ -75,7 +75,7 @@ const Home = () => {
                     </CardHeader>
                     <CardContent>
                       <Button size="sm" className="w-full">
-                        Let's connect
+                        Let&apos;s connect
                       </Button>
                     </CardContent>
                   </Card>

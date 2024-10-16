@@ -2,6 +2,7 @@ import { lazy } from 'react'
 import { createBrowserRouter, redirect } from 'react-router-dom'
 import Home from '@/pages/Home'
 
+// eslint-disable-next-line react-refresh/only-export-components
 const Messaging = lazy(() => import('@messaging/App'))
 
 export const router = createBrowserRouter([

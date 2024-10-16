@@ -1,0 +1,144 @@
+/* Design System Variables */
+$primary: #f8f9faff;
+$primaryDark: #e9ecefff;
+$primaryLight: #dee2e6ff;
+$secondary: #ced4daff;
+$secondaryDark: #adb5bdff;
+$background: #6c757dff;
+$surface: #495057ff;
+$onPrimary: #343a40ff;
+$onSecondary: #212529ff;
+
+/* SCSS HSL */
+$primary: hsla(210, 17%, 98%, 1);
+$primaryDark: hsla(210, 16%, 93%, 1);
+$primaryLight: hsla(210, 14%, 89%, 1);
+$secondary: hsla(210, 14%, 83%, 1);
+$secondaryDark: hsla(210, 11%, 71%, 1);
+$background: hsla(208, 7%, 46%, 1);
+$surface: hsla(210, 9%, 31%, 1);
+$onPrimary: hsla(210, 10%, 23%, 1);
+$onSecondary: hsla(210, 11%, 15%, 1);
+
+/* SCSS RGB */
+$primary: rgba(248, 249, 250, 1);
+$primaryDark: rgba(233, 236, 239, 1);
+$primaryLight: rgba(222, 226, 230, 1);
+$secondary: rgba(206, 212, 218, 1);
+$secondaryDark: rgba(173, 181, 189, 1);
+$background: rgba(108, 117, 125, 1);
+$surface: rgba(73, 80, 87, 1);
+$onPrimary: rgba(52, 58, 64, 1);
+$onSecondary: rgba(33, 37, 41, 1);
+
+/* SCSS Gradient */
+$gradient-top: linear-gradient(
+  0deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-right: linear-gradient(
+  90deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-bottom: linear-gradient(
+  180deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-left: linear-gradient(
+  270deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-top-right: linear-gradient(
+  45deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-bottom-right: linear-gradient(
+  135deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-top-left: linear-gradient(
+  225deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-bottom-left: linear-gradient(
+  315deg,
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+$gradient-radial: radial-gradient(
+  #f8f9faff,
+  #e9ecefff,
+  #dee2e6ff,
+  #ced4daff,
+  #adb5bdff,
+  #6c757dff,
+  #495057ff,
+  #343a40ff,
+  #212529ff
+);
+
+/* Exporting variables for use in other SCSS files */
+@export "colors" as *;
