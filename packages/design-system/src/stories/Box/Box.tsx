@@ -8,24 +8,20 @@ export interface BoxProps {
   border?: string
   children: React.ReactNode
 }
-
-const Box = ({
-  direction = 'column',
-  width = '100%',
-  height = '100%',
-  border = 'none',
-  children,
-  ...props
-}: BoxProps) => {
-  return (
-    <div
-      className={`box box--${direction}`}
-      style={{ width, height, border }}
-      {...props}
-    >
-      {children}
-    </div>
-  )
-}
+const Box = React.forwardRef<HTMLDivElement, BoxProps>((props, ref) => (
+  <div
+    ref={ref}
+    className={`box box--${props.direction}`}
+    style={{
+      width: props.width,
+      height: props.height,
+      border: props.border,
+      position: 'relative',
+    }}
+    {...props}
+  >
+    {props.children}
+  </div>
+))
 
 export default Box
