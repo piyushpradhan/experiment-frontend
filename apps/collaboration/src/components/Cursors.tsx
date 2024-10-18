@@ -25,7 +25,7 @@ function throttle(func: Function, limit: number) {
   let lastFunc: NodeJS.Timeout | undefined
   let lastRan: number
 
-  return function (...args: any[]) {
+  return function(...args: any[]) {
     // @ts-ignore
     const context = this
     if (!lastRan) {
@@ -33,7 +33,7 @@ function throttle(func: Function, limit: number) {
       lastRan = Date.now()
     } else {
       clearTimeout(lastFunc)
-      lastFunc = setTimeout(function () {
+      lastFunc = setTimeout(function() {
         if (Date.now() - lastRan >= limit) {
           func.apply(context, args)
           lastRan = Date.now()
@@ -111,7 +111,7 @@ const Cursors = () => {
   }, [throttledMouseMove])
 
   return (
-    <Box ref={containerRef} direction="column">
+    <Box ref={containerRef} direction="column" border="none">
       {cursors.map((cursorData) => (
         <Cursor key={cursorData.sender} messageBody={cursorData} />
       ))}
