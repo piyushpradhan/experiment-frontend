@@ -1,6 +1,8 @@
 import React from 'react'
 import './style.scss'
 
+import Button from '../Button/Button'
+
 export interface ModalProps {
   isOpen: boolean
   onClose: () => void
@@ -26,16 +28,11 @@ const Modal: React.FC<ModalProps> = ({
         <div className="dialog-header">
           <h2 className="dialog-title">{title}</h2>
           {subTitle && <h3 className="dialog-subtitle">{subTitle}</h3>}
-          <button className="dialog-close" onClick={onClose}>
-            &times;
-          </button>
         </div>
         <div className="dialog-body">{children}</div>
-        {actions && <div className="dialog-actions">{actions}</div>}
         <div className="dialog-footer">
-          <button className="dialog-footer-button" onClick={onClose}>
-            Close
-          </button>
+          {actions && <div className="dialog-actions">{actions}</div>}
+          <Button onClick={onClose} label="Close" />
         </div>
       </div>
     </div>

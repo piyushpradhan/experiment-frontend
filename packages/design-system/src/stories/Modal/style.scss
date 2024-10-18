@@ -23,25 +23,18 @@
 
 .dialog-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
 }
 
 .dialog-title {
-  font-size: 1.5rem;
   margin: 0;
 }
 
 .dialog-subtitle {
-  font-size: 1.2rem;
   color: gray;
-}
-
-.dialog-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
+  margin: 0;
 }
 
 .dialog-body {
@@ -55,19 +48,7 @@
 
 .dialog-footer {
   display: flex;
+  flex-direction: row;
   justify-content: flex-end;
-}
-
-.dialog-footer-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
+  gap: 1rem;
 }

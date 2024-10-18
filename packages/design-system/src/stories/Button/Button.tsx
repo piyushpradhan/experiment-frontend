@@ -14,7 +14,7 @@ const Button = ({
   backgroundColor,
   label,
   ...props
-}: ButtonProps) => {
+}: ButtonProps & React.HTMLAttributes<HTMLButtonElement>) => {
   const mode = primary ? 'button--primary' : 'button--secondary'
   return (
     <button
