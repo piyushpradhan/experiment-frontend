@@ -1,0 +1,14 @@
+.cursor {
+  transform: rotate(-25deg);
+}
+
+.cursor-label {
+  margin: 0 1rem;
+  font-size: 0.6rem;
+  padding: 0 0.3rem;
+  border-radius: 0.2rem;
+  max-width: 4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid black;
+}

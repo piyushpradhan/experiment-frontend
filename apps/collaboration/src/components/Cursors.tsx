@@ -7,6 +7,7 @@ type CursorType = {
   y: number
   sender: string
   color: string
+  name: string
 }
 
 const connectToServer = async (): Promise<WebSocket> => {
@@ -25,7 +26,7 @@ function throttle(func: Function, limit: number) {
   let lastFunc: NodeJS.Timeout | undefined
   let lastRan: number
 
-  return function(...args: any[]) {
+  return function (...args: any[]) {
     // @ts-ignore
     const context = this
     if (!lastRan) {
@@ -33,7 +34,7 @@ function throttle(func: Function, limit: number) {
       lastRan = Date.now()
     } else {
       clearTimeout(lastFunc)
-      lastFunc = setTimeout(function() {
+      lastFunc = setTimeout(function () {
         if (Date.now() - lastRan >= limit) {
           func.apply(context, args)
           lastRan = Date.now()
@@ -43,7 +44,11 @@ function throttle(func: Function, limit: number) {
   }
 }
 
-const Cursors = () => {
+type Props = {
+  name: string
+}
+
+const Cursors = ({ name }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const wsRef = useRef<WebSocket | null>(null)
   const [cursors, setCursors] = useState<CursorType[]>([])
@@ -70,6 +75,7 @@ const Cursors = () => {
       const message = {
         x: ((event.clientX - left) / width) * 100,
         y: ((event.clientY - top) / height) * 100,
+        username: name,
       }
       wsRef.current.send(JSON.stringify(message))
     }
@@ -82,7 +88,9 @@ const Cursors = () => {
     const initializeWebSocket = async () => {
       const ws = await connectToServer()
       wsRef.current = ws
+
       ws.onmessage = (webSocketMessage) => {
+        console.log({ webSocketMessage })
         const messageBody: CursorType = JSON.parse(webSocketMessage.data)
         updateCursors(messageBody)
       }
