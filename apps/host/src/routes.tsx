@@ -5,7 +5,7 @@ import Home from '@/pages/Home'
 // eslint-disable-next-line react-refresh/only-export-components
 const Messaging = lazy(() => import('@messaging/App'))
 // eslint-disable-next-line react-refresh/only-export-components
-const Collaboration = lazy(() => import('@collaboration'))
+const Collaboration = lazy(() => import('@collaboration/index'))
 
 export const router = createBrowserRouter([
   {

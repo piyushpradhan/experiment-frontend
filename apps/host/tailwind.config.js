@@ -7,6 +7,7 @@ module.exports = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
     '../messaging/src/**/*.{js,jsx,ts,tsx}',
+    '../collaboration/src/**/*.{js,jsx,ts,tsx}'
   ],
   prefix: '',
   theme: {
