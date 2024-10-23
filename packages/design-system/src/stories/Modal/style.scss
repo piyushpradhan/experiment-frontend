@@ -1,4 +1,6 @@
-.dialog-overlay {
+@import '../../config/index';
+
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +13,7 @@
   z-index: 1000;
 }
 
-.dialog-content {
+.modal-content {
   background-color: white;
   border-radius: 8px;
   padding: 20px;
@@ -21,34 +23,50 @@
   position: relative;
 }
 
-.dialog-header {
+.modal-close-icon--container {
+  position: relative;
+}
+
+.modal-close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.modal-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: start;
+  gap: $spacing-xxsmall;
 }
 
-.dialog-title {
+.modal-title {
   margin: 0;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-large;
 }
 
-.dialog-subtitle {
+.modal-subtitle {
   color: gray;
   margin: 0;
+  font-size: $font-size-medium;
+  font-weight: $font-weight-normal;
 }
 
-.dialog-body {
-  margin: 20px 0;
+.modal-body {
+  margin: $size-medium 0;
 }
 
-.dialog-actions {
+.modal-actions {
   display: flex;
   justify-content: flex-end;
 }
 
-.dialog-footer {
+.modal-footer {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: $spacing-small;
 }

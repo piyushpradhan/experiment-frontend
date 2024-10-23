@@ -7,7 +7,8 @@
     ".": "./src/index.tsx",
     "./button": "./src/stories/Button.tsx",
     "./box": "./src/stories/Box.tsx",
-    "./modal": "./src/stories/Modal.tsx"
+    "./modal": "./src/stories/Modal.tsx",
+    "./input": "./src/stories/Input.tsx"
   },
   "scripts": {
     "dev": "storybook dev -p 6006",

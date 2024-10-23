@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Box } from 'design-system'
 import Cursor from './Cursor'
+import JoinModal from '../JoinModal'
+
+import { throttle } from '../../utils'
 
 type CursorType = {
   x: number
@@ -22,33 +25,8 @@ const connectToServer = async (): Promise<WebSocket> => {
   })
 }
 
-function throttle(func: Function, limit: number) {
-  let lastFunc: NodeJS.Timeout | undefined
-  let lastRan: number
-
-  return function (...args: any[]) {
-    // @ts-ignore
-    const context = this
-    if (!lastRan) {
-      func.apply(context, args)
-      lastRan = Date.now()
-    } else {
-      clearTimeout(lastFunc)
-      lastFunc = setTimeout(function () {
-        if (Date.now() - lastRan >= limit) {
-          func.apply(context, args)
-          lastRan = Date.now()
-        }
-      }, limit - (Date.now() - lastRan))
-    }
-  }
-}
-
-type Props = {
-  name: string
-}
-
-const Cursors = ({ name }: Props) => {
+const Cursors = () => {
+  const storedUser: User = JSON.parse(localStorage.getItem('user') || '{}')
   const containerRef = useRef<HTMLDivElement>(null)
   const wsRef = useRef<WebSocket | null>(null)
   const [cursors, setCursors] = useState<CursorType[]>([])
@@ -68,14 +46,14 @@ const Cursors = ({ name }: Props) => {
   }, [])
 
   const handleMouseMove = useCallback((event: MouseEvent) => {
-    if (wsRef.current && containerRef.current) {
+    if (wsRef.current && containerRef.current && storedUser.uid) {
       const { left, top, width, height } =
         containerRef.current.getBoundingClientRect()
       // Send position relative to the container
       const message = {
         x: ((event.clientX - left) / width) * 100,
         y: ((event.clientY - top) / height) * 100,
-        username: name,
+        username: storedUser.name,
       }
       wsRef.current.send(JSON.stringify(message))
     }
@@ -90,7 +68,6 @@ const Cursors = ({ name }: Props) => {
       wsRef.current = ws
 
       ws.onmessage = (webSocketMessage) => {
-        console.log({ webSocketMessage })
         const messageBody: CursorType = JSON.parse(webSocketMessage.data)
         updateCursors(messageBody)
       }
@@ -117,6 +94,10 @@ const Cursors = ({ name }: Props) => {
       }
     }
   }, [throttledMouseMove])
+
+  if (!storedUser.uid) {
+    return <JoinModal />
+  }
 
   return (
     <Box ref={containerRef} direction="column" border="none">

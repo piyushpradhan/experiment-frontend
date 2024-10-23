@@ -7,7 +7,7 @@ import { getMessagesById, getActiveChannel } from '@messaging/store/selectors'
 
 import type { AppState } from '@messaging/types'
 import { useSocket } from '@messaging/store/hooks'
-import { messageTimestampComparator } from '@messaging/lib/utils'
+import { getStoredUser, messageTimestampComparator } from '@messaging/lib/utils'
 
 const Messages = () => {
   const { loadMoreMessages, isLoading } = useSocket()
@@ -16,7 +16,7 @@ const Messages = () => {
   const messageContainerRef = useRef<HTMLDivElement>(null)
   const isScrolledToBottomRef = useRef(true)
 
-  const activeUser = localStorage.getItem('user')
+  const { uid: activeUser } = getStoredUser()
 
   const messagesById = useSelector((state: AppState) => getMessagesById(state))
   const activeChannel = useSelector((state: AppState) =>

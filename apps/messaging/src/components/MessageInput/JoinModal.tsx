@@ -62,7 +62,7 @@ const JoinModal = () => {
     // Update the `active` user
     dispatch(storeCreatedUser(createdUser))
     // Update the local storage
-    localStorage.setItem('user', createdUser.uid)
+    localStorage.setItem('user', JSON.stringify(createdUser))
     setIsModalOpen(false)
   }, [])
 

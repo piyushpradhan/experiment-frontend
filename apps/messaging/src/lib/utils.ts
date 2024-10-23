@@ -34,3 +34,8 @@ export function findLatestTimestamp(timestamps: string[]) {
     Math.max(...timestamps.map((ts) => Date.parse(ts)))
   ).toISOString()
 }
+
+export function getStoredUser() {
+  const stringifiedUserData = localStorage.getItem('user') || '{}'
+  return JSON.parse(stringifiedUserData)
+}

@@ -1,0 +1,20 @@
+@import '../../config/index';
+
+.input-container {
+  position: relative;
+}
+
+.input {
+  padding: $spacing-xsmall $spacing-xsmall;
+  border: 1px solid $secondary;
+  border-radius: $size-xsmall;
+}
+
+.input--trailing-icon {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: calc(50% - 8px);
+  right: $spacing-xxsmall;
+  cursor: pointer;
+}
