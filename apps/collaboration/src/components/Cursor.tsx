@@ -6,7 +6,7 @@ type Props = {
     y: number
     color: string
     sender: string
-    name: string
+    username: string
   }
 }
 
@@ -30,7 +30,7 @@ const Cursor = ({ messageBody }: Props) => {
         className="cursor-label"
         style={{ backgroundColor: `hsl(${messageBody.color}, 50%, 50%)` }}
       >
-        {messageBody.name}
+        {messageBody.username}
       </div>
     </div>
   )

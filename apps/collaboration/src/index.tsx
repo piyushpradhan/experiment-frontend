@@ -48,23 +48,20 @@ function Collaboration() {
             label="Join"
           />
         }
-        children={
-          <>
-            <input
-              type="text"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              placeholder="Enter ID..."
-            />
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter name..."
-            />
-          </>
-        }
-      />
+      >
+        <input
+          type="text"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          placeholder="Enter ID..."
+        />
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter name..."
+        />
+      </Modal>
     </Box>
   )
 }

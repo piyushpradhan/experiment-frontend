@@ -2,16 +2,18 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Box } from 'design-system'
 import Cursor from './Cursor'
 
+const collaborationUrl = import.meta.env.VITE_COLLABORATION_URL
+
 type CursorType = {
   x: number
   y: number
   sender: string
   color: string
-  name: string
+  username: string
 }
 
 const connectToServer = async (): Promise<WebSocket> => {
-  const ws: WebSocket = new WebSocket('ws://localhost:7071/ws')
+  const ws: WebSocket = new WebSocket(`${collaborationUrl}:7071/ws`)
   return new Promise((resolve) => {
     const timer = setInterval(() => {
       if (ws.readyState === 1) {
@@ -22,12 +24,12 @@ const connectToServer = async (): Promise<WebSocket> => {
   })
 }
 
-function throttle(func: Function, limit: number) {
+function throttle(func: (...args: any[]) => void, limit: number) {
   let lastFunc: NodeJS.Timeout | undefined
   let lastRan: number
 
   return function (...args: any[]) {
-    // @ts-ignore
+    // @ts-expect-error not specifying type here
     const context = this
     if (!lastRan) {
       func.apply(context, args)
@@ -67,19 +69,22 @@ const Cursors = ({ name }: Props) => {
     })
   }, [])
 
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    if (wsRef.current && containerRef.current) {
-      const { left, top, width, height } =
-        containerRef.current.getBoundingClientRect()
-      // Send position relative to the container
-      const message = {
-        x: ((event.clientX - left) / width) * 100,
-        y: ((event.clientY - top) / height) * 100,
-        username: name,
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (wsRef.current && containerRef.current) {
+        const { left, top, width, height } =
+          containerRef.current.getBoundingClientRect()
+        // Send position relative to the container
+        const message = {
+          x: ((event.clientX - left) / width) * 100,
+          y: ((event.clientY - top) / height) * 100,
+          username: name,
+        }
+        wsRef.current.send(JSON.stringify(message))
       }
-      wsRef.current.send(JSON.stringify(message))
-    }
-  }, [])
+    },
+    [name]
+  )
 
   // Throttle the handleMouseMove function to limit the rate of sending messages
   const throttledMouseMove = useRef(throttle(handleMouseMove, 100)).current
