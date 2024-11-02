@@ -56,7 +56,7 @@ const Home = () => {
                     Messaging
                   </NavLink>
                   <NavLink
-                    to="/customers"
+                    to="/collaboration"
                     className={({ isActive }) =>
                       isActive
                         ? `mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground`
@@ -64,7 +64,7 @@ const Home = () => {
                     }
                   >
                     <Users className="h-5 w-5" />
-                    Customers
+                    Collaboration
                   </NavLink>
                 </nav>
                 <div className="mt-auto">
