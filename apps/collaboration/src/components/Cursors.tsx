@@ -13,7 +13,7 @@ type CursorType = {
 }
 
 const connectToServer = async (): Promise<WebSocket> => {
-  const ws: WebSocket = new WebSocket(`${collaborationUrl}:7071/ws`)
+  const ws: WebSocket = new WebSocket(`${collaborationUrl}/ws`)
   return new Promise((resolve) => {
     const timer = setInterval(() => {
       if (ws.readyState === 1) {
