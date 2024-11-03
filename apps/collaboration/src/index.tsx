@@ -20,7 +20,7 @@ function Collaboration() {
   if (Object.keys(parsedUser).length > 0) {
     return (
       <Box direction="column" border="none">
-        <Cursors name={parsedUser.name} />
+        <Cursors name={parsedUser.name} id={parsedUser.id} />
       </Box>
     )
   }

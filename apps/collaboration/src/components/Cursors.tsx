@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Box } from 'design-system'
 import Cursor from './Cursor'
-
-const collaborationUrl = import.meta.env.VITE_COLLABORATION_URL
+import { throttle } from '@collaboration/utils'
+import { connectToServer } from '@collaboration/utils/socket'
 
 type CursorType = {
   x: number
@@ -12,48 +12,19 @@ type CursorType = {
   username: string
 }
 
-const connectToServer = async (): Promise<WebSocket> => {
-  const ws: WebSocket = new WebSocket(`${collaborationUrl}/ws`)
-  return new Promise((resolve) => {
-    const timer = setInterval(() => {
-      if (ws.readyState === 1) {
-        clearInterval(timer)
-        resolve(ws)
-      }
-    }, 10)
-  })
-}
-
-function throttle(func: (...args: any[]) => void, limit: number) {
-  let lastFunc: NodeJS.Timeout | undefined
-  let lastRan: number
-
-  return function (...args: any[]) {
-    // @ts-expect-error not specifying type here
-    const context = this
-    if (!lastRan) {
-      func.apply(context, args)
-      lastRan = Date.now()
-    } else {
-      clearTimeout(lastFunc)
-      lastFunc = setTimeout(function () {
-        if (Date.now() - lastRan >= limit) {
-          func.apply(context, args)
-          lastRan = Date.now()
-        }
-      }, limit - (Date.now() - lastRan))
-    }
-  }
-}
-
 type Props = {
   name: string
+  id: string
 }
 
-const Cursors = ({ name }: Props) => {
+const Cursors = ({ name, id }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const wsRef = useRef<WebSocket | null>(null)
   const [cursors, setCursors] = useState<CursorType[]>([])
+  const [isConnected, setIsConnected] = useState<boolean>(false)
+  const [reconnectDelay, setReconnectDelay] = useState<number>(1000)
+
+  console.log({ cursors })
 
   const updateCursors = useCallback((messageBody: CursorType) => {
     setCursors((prevCursors: CursorType[]) => {
@@ -74,10 +45,10 @@ const Cursors = ({ name }: Props) => {
       if (wsRef.current && containerRef.current) {
         const { left, top, width, height } =
           containerRef.current.getBoundingClientRect()
-        // Send position relative to the container
         const message = {
           x: ((event.clientX - left) / width) * 100,
           y: ((event.clientY - top) / height) * 100,
+          sender: id,
           username: name,
         }
         wsRef.current.send(JSON.stringify(message))
@@ -86,21 +57,40 @@ const Cursors = ({ name }: Props) => {
     [name]
   )
 
-  // Throttle the handleMouseMove function to limit the rate of sending messages
   const throttledMouseMove = useRef(throttle(handleMouseMove, 100)).current
 
-  useEffect(() => {
-    const initializeWebSocket = async () => {
-      const ws = await connectToServer()
-      wsRef.current = ws
+  const initializeWebSocket = async () => {
+    const ws = await connectToServer()
+    wsRef.current = ws
+    setIsConnected(true)
+    setReconnectDelay(1000) // Reset reconnect delay on successful connection
 
-      ws.onmessage = (webSocketMessage) => {
-        console.log({ webSocketMessage })
-        const messageBody: CursorType = JSON.parse(webSocketMessage.data)
-        updateCursors(messageBody)
-      }
+    ws.onmessage = (webSocketMessage) => {
+      const messageBody: CursorType = JSON.parse(webSocketMessage.data)
+      updateCursors(messageBody)
     }
 
+    ws.onclose = () => {
+      setIsConnected(false)
+      setCursors((prevCursors) =>
+        prevCursors.filter((cursor) => cursor.sender !== name)
+      )
+      attemptReconnect()
+    }
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error)
+    }
+  }
+
+  const attemptReconnect = () => {
+    setTimeout(() => {
+      setReconnectDelay((prev) => Math.min(prev * 2, 30000)) // Exponential backoff
+      initializeWebSocket()
+    }, reconnectDelay)
+  }
+
+  useEffect(() => {
     initializeWebSocket()
 
     return () => {
@@ -128,6 +118,7 @@ const Cursors = ({ name }: Props) => {
       {cursors.map((cursorData) => (
         <Cursor key={cursorData.sender} messageBody={cursorData} />
       ))}
+      {!isConnected && <div>Reconnecting...</div>}
     </Box>
   )
 }
