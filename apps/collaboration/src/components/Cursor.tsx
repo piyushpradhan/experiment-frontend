@@ -1,4 +1,4 @@
-import './cursor.scss'
+import './style.scss'
 
 type Props = {
   messageBody: {

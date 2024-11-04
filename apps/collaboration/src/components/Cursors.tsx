@@ -124,7 +124,14 @@ const Cursors = ({ name }: Props) => {
   }, [throttledMouseMove])
 
   return (
-    <Box ref={containerRef} direction="column" border="none">
+    <Box
+      ref={containerRef}
+      direction="column"
+      style={{
+        cursor: 'none',
+        border: 'none',
+      }}
+    >
       {cursors.map((cursorData) => (
         <Cursor key={cursorData.sender} messageBody={cursorData} />
       ))}

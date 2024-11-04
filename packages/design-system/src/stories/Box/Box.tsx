@@ -1,13 +1,14 @@
 import React from 'react'
 import './style.scss'
 
-export interface BoxProps {
+export type BoxProps = {
   direction?: 'column' | 'row'
   width?: string
   height?: string
   border?: string
   children: React.ReactNode
-}
+} & React.HTMLAttributes<HTMLDivElement>
+
 const Box = React.forwardRef<HTMLDivElement, BoxProps>((props, ref) => (
   <div
     ref={ref}
