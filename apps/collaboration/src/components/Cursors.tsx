@@ -12,6 +12,10 @@ type CursorType = {
   username: string
 }
 
+type CursorMap = {
+  [senderID: string]: CursorType
+}
+
 const connectToServer = async (): Promise<WebSocket> => {
   const ws: WebSocket = new WebSocket(`${collaborationUrl}/ws`)
   return new Promise((resolve) => {
@@ -24,21 +28,23 @@ const connectToServer = async (): Promise<WebSocket> => {
   })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function throttle(func: (...args: any[]) => void, limit: number) {
   let lastFunc: NodeJS.Timeout | undefined
   let lastRan: number
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return function (...args: any[]) {
-    // @ts-expect-error not specifying type here
-    const context = this
     if (!lastRan) {
-      func.apply(context, args)
+      // @ts-expect-error not specifying type here
+      func.apply(this, args)
       lastRan = Date.now()
     } else {
       clearTimeout(lastFunc)
       lastFunc = setTimeout(function () {
         if (Date.now() - lastRan >= limit) {
-          func.apply(context, args)
+          // @ts-expect-error not specifying type here
+          func.apply(this, args)
           lastRan = Date.now()
         }
       }, limit - (Date.now() - lastRan))
@@ -53,20 +59,13 @@ type Props = {
 const Cursors = ({ name }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const wsRef = useRef<WebSocket | null>(null)
-  const [cursors, setCursors] = useState<CursorType[]>([])
+  const [cursors, setCursors] = useState<CursorMap>({})
 
   const updateCursors = useCallback((messageBody: CursorType) => {
-    setCursors((prevCursors: CursorType[]) => {
-      const existingCursorIndex = prevCursors.findIndex(
-        (cursor) => cursor.sender === messageBody.sender
-      )
-      if (existingCursorIndex !== -1) {
-        const updatedCursors = [...prevCursors]
-        updatedCursors[existingCursorIndex] = messageBody
-        return updatedCursors
-      }
-      return [...prevCursors, messageBody]
-    })
+    setCursors((prevCursors: CursorMap) => ({
+      ...prevCursors,
+      [messageBody.sender]: messageBody,
+    }))
   }, [])
 
   const handleMouseMove = useCallback(
@@ -105,7 +104,7 @@ const Cursors = ({ name }: Props) => {
 
     return () => {
       if (wsRef.current) {
-        wsRef.current.close() // Clean up the WebSocket connection
+        wsRef.current.close()
       }
     }
   }, [updateCursors])
@@ -132,7 +131,7 @@ const Cursors = ({ name }: Props) => {
         border: 'none',
       }}
     >
-      {cursors.map((cursorData) => (
+      {Object.values(cursors).map((cursorData) => (
         <Cursor key={cursorData.sender} messageBody={cursorData} />
       ))}
     </Box>

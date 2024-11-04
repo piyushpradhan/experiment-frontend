@@ -21,6 +21,8 @@ const Cursor = ({ messageBody }: Props) => {
     transition: 'all 0.1s',
   }
 
+  console.log({ messageBody })
+
   return (
     <div style={cursorStyle}>
       <svg className="cursor" width="20" height="20">
