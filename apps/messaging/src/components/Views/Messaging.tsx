@@ -36,10 +36,7 @@ const Messaging = () => {
 
   return (
     <main className="flex flex-col gap-4 p-4 lg:gap-6 lg:p-6 h-full overflow-hidden">
-      <div
-        className="grid grid-cols-5 lg:grid-cols-6 2xl:grid-cols-9 gap-4 rounded-lg w-full h-full overflow-hidden"
-        x-chunk="dashboard-02-chunk-1"
-      >
+      <div className="grid grid-cols-5 lg:grid-cols-6 2xl:grid-cols-9 gap-4 rounded-lg w-full h-full overflow-hidden">
         <div className="flex flex-col gap-1 col-span-2 2xl:col-span-2 border">
           <div className="p-4 flex flex-row justify-between items-center border-b">
             <h2 className="md:text-lg 2xl:text-2xl font-bold">Messages</h2>

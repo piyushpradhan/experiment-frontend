@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -46,7 +46,6 @@ type UserCreationForm = z.infer<typeof userCreationForm>
 
 const JoinModal = () => {
   const dispatch = useDispatch()
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const form = useForm<UserCreationForm>({
     resolver: zodResolver(userCreationForm),
@@ -63,24 +62,14 @@ const JoinModal = () => {
     dispatch(storeCreatedUser(createdUser))
     // Update the local storage
     localStorage.setItem('user', createdUser.uid)
-    setIsModalOpen(false)
-  }, [])
-
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false)
-  }, [])
-
-  const handleOpenModal = useCallback(() => {
-    setIsModalOpen(true)
   }, [])
 
   return (
-    <Dialog open={isModalOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button
           variant="default"
           className="flex flex-row items-center justify-center gap-2"
-          onClick={handleOpenModal}
         >
           Join anonymously <VenetianMask />
         </Button>
@@ -130,11 +119,7 @@ const JoinModal = () => {
             />
             <DialogFooter className="flex flex-col sm:justify-end">
               <DialogClose asChild>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleCloseModal}
-                >
+                <Button type="button" variant="secondary">
                   Cancel
                 </Button>
               </DialogClose>
