@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Box } from 'design-system'
 import Cursor from './Cursor'
-import { throttle } from '@collaboration/utils'
-import { connectToServer } from '@collaboration/utils/socket'
+import { throttle } from '../utils'
+import { connectToServer } from '../utils/socket'
 
 type CursorType = {
   x: number
