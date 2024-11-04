@@ -3,18 +3,7 @@ import { Box } from 'design-system'
 import Cursor from './Cursor'
 import { throttle } from '../utils'
 import { connectToServer } from '../utils/socket'
-
-type CursorType = {
-  x: number
-  y: number
-  sender: string
-  color: string
-  username: string
-}
-
-type CursorMap = {
-  [senderID: string]: CursorType
-}
+import type { CursorMap, CursorType } from '../types'
 
 type Props = {
   name: string
