@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Box } from 'design-system'
 import Cursor from './Cursor'
-
-const collaborationUrl = import.meta.env.VITE_COLLABORATION_URL
+import { throttle } from '@collaboration/utils'
+import { connectToServer } from '@collaboration/utils/socket'
 
 type CursorType = {
   x: number
@@ -14,42 +14,6 @@ type CursorType = {
 
 type CursorMap = {
   [senderID: string]: CursorType
-}
-
-const connectToServer = async (): Promise<WebSocket> => {
-  const ws: WebSocket = new WebSocket(`${collaborationUrl}/ws`)
-  return new Promise((resolve) => {
-    const timer = setInterval(() => {
-      if (ws.readyState === 1) {
-        clearInterval(timer)
-        resolve(ws)
-      }
-    }, 10)
-  })
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function throttle(func: (...args: any[]) => void, limit: number) {
-  let lastFunc: NodeJS.Timeout | undefined
-  let lastRan: number
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return function (...args: any[]) {
-    if (!lastRan) {
-      // @ts-expect-error not specifying type here
-      func.apply(this, args)
-      lastRan = Date.now()
-    } else {
-      clearTimeout(lastFunc)
-      lastFunc = setTimeout(function () {
-        if (Date.now() - lastRan >= limit) {
-          // @ts-expect-error not specifying type here
-          func.apply(this, args)
-          lastRan = Date.now()
-        }
-      }, limit - (Date.now() - lastRan))
-    }
-  }
 }
 
 type Props = {
@@ -64,7 +28,7 @@ const Cursors = ({ name }: Props) => {
   const updateCursors = useCallback((messageBody: CursorType) => {
     setCursors((prevCursors: CursorMap) => ({
       ...prevCursors,
-      [messageBody.sender]: messageBody,
+      [messageBody.username]: messageBody,
     }))
   }, [])
 
@@ -90,22 +54,38 @@ const Cursors = ({ name }: Props) => {
 
   useEffect(() => {
     const initializeWebSocket = async () => {
-      const ws = await connectToServer()
+      let ws = await connectToServer()
       wsRef.current = ws
 
       ws.onmessage = (webSocketMessage) => {
-        console.log({ webSocketMessage })
         const messageBody: CursorType = JSON.parse(webSocketMessage.data)
         updateCursors(messageBody)
+      }
+
+      ws.onclose = async () => {
+        ws = await connectToServer()
+        wsRef.current = ws
       }
     }
 
     initializeWebSocket()
 
+    const handleVisibilityChange = () => {
+      if (
+        document.visibilityState === 'visible' &&
+        wsRef.current?.readyState !== WebSocket.OPEN
+      ) {
+        initializeWebSocket()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     return () => {
       if (wsRef.current) {
         wsRef.current.close()
       }
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [updateCursors])
 
