@@ -1,0 +1,12 @@
+@import '../../config/_index.scss';
+
+.input {
+  border: 1px solid $primaryDark;
+  padding: 0.5rem 0.5rem;
+  border-radius: $size-small;
+}
+
+.input-error {
+  color: $error;
+  font-size: $font-size-xsmall;
+}

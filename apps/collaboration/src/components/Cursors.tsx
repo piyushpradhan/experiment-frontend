@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Box } from 'design-system'
 import Cursor from './Cursor'
 import { throttle } from '../utils'
@@ -7,12 +7,13 @@ import type { CursorMap, CursorType } from '../types'
 
 type Props = {
   name: string
+  cursors: CursorMap
+  setCursors: React.Dispatch<React.SetStateAction<CursorMap>>
 }
 
-const Cursors = ({ name }: Props) => {
+const Cursors = ({ name, cursors, setCursors }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const wsRef = useRef<WebSocket | null>(null)
-  const [cursors, setCursors] = useState<CursorMap>({})
 
   const updateCursors = useCallback((messageBody: CursorType) => {
     setCursors((prevCursors: CursorMap) => ({
