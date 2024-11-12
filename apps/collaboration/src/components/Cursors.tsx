@@ -35,7 +35,7 @@ const Cursors = ({ name }: Props) => {
         wsRef.current.send(JSON.stringify(message))
       }
     },
-    [name]
+    [name, wsRef, containerRef]
   )
 
   // Throttle the handleMouseMove function to limit the rate of sending messages
