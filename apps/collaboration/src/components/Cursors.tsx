@@ -52,8 +52,13 @@ const Cursors = ({ name }: Props) => {
       }
 
       ws.onclose = async () => {
-        ws = await connectToServer()
-        wsRef.current = ws
+        try {
+          ws = await connectToServer()
+          wsRef.current = ws
+          console.log('Reconnected to the server')
+        } catch (error) {
+          console.error('Reconnection failed: ', error)
+        }
       }
     }
 
