@@ -57,14 +57,14 @@ const Cursors = ({ name }: Props) => {
       }
     }
 
-    initializeWebSocket()
+    initializeWebSocket().then(() => {})
 
     const handleVisibilityChange = () => {
       if (
         document.visibilityState === 'visible' &&
         wsRef.current?.readyState !== WebSocket.OPEN
       ) {
-        initializeWebSocket()
+        initializeWebSocket().then(() => {})
       }
     }
 

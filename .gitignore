@@ -17,6 +17,7 @@ build
 dist
 
 # Misc
+.idea
 .DS_Store
 *.pem
 tsconfig.tsbuildinfo
