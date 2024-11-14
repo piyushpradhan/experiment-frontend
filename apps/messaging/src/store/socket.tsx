@@ -14,7 +14,7 @@ import {
 } from '../store/actions'
 
 import type { AppState, Channel, MessageSocketResponse } from '@messaging/types'
-import { setChannelMessages } from './actions/message'
+import { setChannelMessages, setSingleMessageDetails } from './actions/message'
 import { getSocket } from './utils'
 import { Socket } from 'socket.io-client'
 import { useSelector } from 'react-redux'
@@ -76,6 +76,14 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         offset.current += limit
         initialChannelLoad.current = false
       }
+
+      console.log({ data })
+
+      data.messages.map((message) => {
+        if (message.tagged_message) {
+          socket.emit('requestSingleMessage', message.tagged_message)
+        }
+      })
     }
 
     const handleChannels = (data: Channel[]) => {
@@ -91,6 +99,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       dispatch(loadMoreMessagesAction(data.messages, data.channelId))
     }
 
+    const handleMessageDetails = (message: MessageSocketResponse) => {
+      if (message) {
+        dispatch(setSingleMessageDetails(message))
+      }
+    }
+
     socket.on('connect', () => {
       socket.emit('join')
     })
@@ -98,12 +112,14 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     socket.on('channelMessages', handleChannelMessages)
     socket.on('channels', handleChannels)
     socket.on('moreChannelMessages', handleMoreChannelMessages)
+    socket.on('singleMessage', handleMessageDetails)
 
     return () => {
       socket.off('channels')
       socket.off('message')
       socket.off('channelMessages')
       socket.off('moreChannelMessages')
+      socket.off('singleMessage')
     }
   }, [activeChannel])
 

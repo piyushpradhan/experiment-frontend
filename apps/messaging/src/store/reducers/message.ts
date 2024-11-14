@@ -7,7 +7,11 @@ import type {
   TaggedMessage,
 } from '@messaging/types'
 import { combineReducers } from '@reduxjs/toolkit'
-import { SetChannelMessagesPayload, TagMessagePayload } from '../actions/types'
+import {
+  SetChannelMessagesPayload,
+  SetSingleMessagePayload,
+  TagMessagePayload,
+} from '../actions/types'
 
 const taggedMessage = (
   state: TaggedMessage = null,
@@ -74,8 +78,23 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
 
       return messagesById
     }
-    case atypes.SET_ACTIVE_CHANNEL:
+    // case atypes.SET_ACTIVE_CHANNEL:
+    case atypes.SET_SINGLE_MESSAGE: {
+      const { payload }: Action<string, SetSingleMessagePayload> =
+        action as Action<string, SetSingleMessagePayload>
 
+      return {
+        ...state,
+        [payload.message.id]: {
+          id: payload.message.id,
+          sender: payload.message.sender,
+          contents: payload.message.contents,
+          timestamp: payload.message.timestamp,
+          channelId: payload.message.channel_id,
+          taggedMessage: payload.message.tagged_message,
+        },
+      }
+    }
     default:
       return state
   }
