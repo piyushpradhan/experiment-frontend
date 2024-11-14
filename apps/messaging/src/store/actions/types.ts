@@ -5,6 +5,10 @@ export type SetChannelMessagesPayload = {
   channelId: string
 }
 
+export type SetSingleMessagePayload = {
+  message: MessageSocketResponse
+}
+
 export type TagMessagePayload = {
   messageId: string | null
 }

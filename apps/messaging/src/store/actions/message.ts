@@ -2,6 +2,7 @@ import * as atypes from '../../store/actionTypes'
 import type { MessageSocketResponse, Action } from '@messaging/types'
 import type {
   SetChannelMessagesPayload,
+  SetSingleMessagePayload,
   TagMessagePayload,
 } from '@messaging/store/actions/types'
 
@@ -33,5 +34,14 @@ export const loadMoreMessages = (
   payload: {
     messages,
     channelId,
+  },
+})
+
+export const setSingleMessageDetails = (
+  message: MessageSocketResponse
+): Action<string, SetSingleMessagePayload> => ({
+  type: atypes.SET_SINGLE_MESSAGE,
+  payload: {
+    message,
   },
 })
