@@ -19,16 +19,12 @@ export const router = createBrowserRouter([
       {
         path: 'messaging',
         element: <Messaging />,
-        loader: () => {
-          return null
-        },
+        loader: () => redirect('/messaging'),
       },
       {
         path: 'collaboration',
         element: <Collaboration />,
-        loader: () => {
-          return null
-        },
+        loader: () => redirect('/collaboration'),
       },
     ],
   },
