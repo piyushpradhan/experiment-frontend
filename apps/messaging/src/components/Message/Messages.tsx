@@ -15,6 +15,7 @@ const Messages = () => {
   const endOfMessagesRef = useRef<HTMLDivElement>(null)
   const messageContainerRef = useRef<HTMLDivElement>(null)
   const isScrolledToBottomRef = useRef(true)
+  const previousScrollHeightRef = useRef(0)
 
   const activeUser = localStorage.getItem('user')
 
@@ -43,6 +44,16 @@ const Messages = () => {
     }
   }, [activeChannel])
 
+  // Maintain scroll position after loading more messages
+  useEffect(() => {
+    if (messageContainerRef.current && previousScrollHeightRef.current > 0) {
+      const newScrollHeight = messageContainerRef.current.scrollHeight
+      const scrollDiff = newScrollHeight - previousScrollHeightRef.current
+      messageContainerRef.current.scrollTop = scrollDiff
+      previousScrollHeightRef.current = 0 // Reset for next load
+    }
+  }, [messages])
+
   const handleScroll = useCallback(() => {
     if (messageContainerRef.current) {
       const { scrollTop, clientHeight, scrollHeight } =
@@ -53,11 +64,12 @@ const Messages = () => {
         scrollTop + clientHeight >= scrollHeight - 1
 
       // Load more messages if at the top
-      if (scrollTop === 0) {
+      if (scrollTop === 0 && !isLoading) {
+        previousScrollHeightRef.current = scrollHeight
         loadMoreMessages(activeChannel)
       }
     }
-  }, [loadMoreMessages, activeChannel])
+  }, [loadMoreMessages, activeChannel, isLoading])
 
   useEffect(() => {
     const container = messageContainerRef.current
@@ -65,7 +77,7 @@ const Messages = () => {
       container.addEventListener('scroll', handleScroll)
       return () => container.removeEventListener('scroll', handleScroll)
     }
-  }, [isLoading, activeChannel, handleScroll])
+  }, [handleScroll])
 
   return (
     <div
@@ -75,7 +87,7 @@ const Messages = () => {
       <div className="flex flex-col flex-1 justify-end flex-grow gap-2 pt-2 px-2">
         {messages.map((message) => (
           <MessageComponent
-            key={`${message.id}-${Math.random()}`} // Unique key for each message
+            key={`${message.id}-${Math.random()}`}
             message={message}
             uid={`${activeUser}`}
           />
