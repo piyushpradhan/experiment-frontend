@@ -1,0 +1,23 @@
+@import '../../config/_index.scss';
+
+.input__container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xxsmall;
+}
+
+.input {
+  border: 1px solid $primaryDark;
+  padding: 0.5rem 0.5rem;
+  border-radius: $size-xsmall;
+}
+
+.input-error {
+  color: $error;
+  font-size: $font-size-xsmall;
+}
+
+.input__label {
+  font-size: $font-size-small;
+  font-weight: $font-weight-bold;
+}

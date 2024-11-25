@@ -1,3 +1,5 @@
+@import '../../config/index';
+
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -30,6 +32,8 @@
 
 .dialog-title {
   margin: 0;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-large;
 }
 
 .dialog-subtitle {
