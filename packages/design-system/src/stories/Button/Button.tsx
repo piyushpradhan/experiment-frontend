@@ -1,21 +1,23 @@
 import './style.scss'
 
 export interface ButtonProps {
-  primary?: boolean
+  variant?: 'primary' | 'secondary' | 'danger'
   backgroundColor?: string
   size?: 'small' | 'medium' | 'large'
-  label: string
+  label?: string
+  children?: React.ReactNode
   onClick?: () => void
 }
 
 const Button = ({
-  primary = false,
+  variant = 'primary',
   size = 'medium',
   backgroundColor,
   label,
+  children = null,
   ...props
 }: ButtonProps & React.HTMLAttributes<HTMLButtonElement>) => {
-  const mode = primary ? 'button--primary' : 'button--secondary'
+  const mode = `button--${variant}`
   return (
     <button
       type="button"
@@ -23,7 +25,7 @@ const Button = ({
       style={{ backgroundColor }}
       {...props}
     >
-      {label}
+      {children ?? label}
     </button>
   )
 }

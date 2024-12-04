@@ -32,7 +32,6 @@ function Collaboration() {
     <Box direction="column" border="none">
       <Button
         label="Join this collaborative document"
-        primary
         onClick={() => setIsOpen(true)}
       />
       <Modal
@@ -76,7 +75,7 @@ function Collaboration() {
             }}
             onBlur={() => setNameTouched(true)}
             placeholder="Enter name..."
-            isInvalid={nameTouched && name.length < 3}
+            isInvalid={nameTouched && name?.length < 3}
             errorMsg="Name must have at least 3 characters"
           />
         </div>

@@ -1,6 +1,23 @@
-// TODO: Update these two colors
-$error: red;
-$success: green;
+/* Base Colors */
+$white: #ffffffff;
+$black: #000000ff;
+
+/* Semantic Colors */
+$error: #ff6b6bff; // Soft red
+$errorLight: #ffa8a899;
+$errorDark: #e03131ff;
+
+$success: #51cf66ff; // Soft green
+$successLight: #8ce99aff;
+$successDark: #2f9e44ff;
+
+$warning: #ffd43bff; // Soft yellow
+$warningLight: #ffe066ff;
+$warningDark: #f08c00ff;
+
+$info: #339af0ff; // Soft blue
+$infoLight: #74c0fcff;
+$infoDark: #1c7ed6ff;
 
 /* Design System Variables */
 $primary: #f8f9faff;
@@ -12,28 +29,6 @@ $background: #6c757dff;
 $surface: #495057ff;
 $onPrimary: #343a40ff;
 $onSecondary: #212529ff;
-
-/* SCSS HSL */
-$primary: hsla(210, 17%, 98%, 1);
-$primaryDark: hsla(210, 16%, 93%, 1);
-$primaryLight: hsla(210, 14%, 89%, 1);
-$secondary: hsla(210, 14%, 83%, 1);
-$secondaryDark: hsla(210, 11%, 71%, 1);
-$background: hsla(208, 7%, 46%, 1);
-$surface: hsla(210, 9%, 31%, 1);
-$onPrimary: hsla(210, 10%, 23%, 1);
-$onSecondary: hsla(210, 11%, 15%, 1);
-
-/* SCSS RGB */
-$primary: rgba(248, 249, 250, 1);
-$primaryDark: rgba(233, 236, 239, 1);
-$primaryLight: rgba(222, 226, 230, 1);
-$secondary: rgba(206, 212, 218, 1);
-$secondaryDark: rgba(173, 181, 189, 1);
-$background: rgba(108, 117, 125, 1);
-$surface: rgba(73, 80, 87, 1);
-$onPrimary: rgba(52, 58, 64, 1);
-$onSecondary: rgba(33, 37, 41, 1);
 
 /* SCSS Gradient */
 $gradient-top: linear-gradient(

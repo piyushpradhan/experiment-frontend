@@ -4,7 +4,7 @@
   display: inline-block;
   cursor: pointer;
   border: 0;
-  border-radius: $size-small;
+  border-radius: $size-xsmall;
   font-weight: 700;
   line-height: 1;
   font-family: $font-family-base;
@@ -20,11 +20,22 @@
 }
 
 .button--secondary {
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+  box-shadow: $secondaryDark 0px 0px 0px 1px inset;
   background-color: $secondary;
   color: $onSecondary;
   &:hover {
     background-color: $secondaryDark;
+  }
+}
+
+.button--danger {
+  background-color: $errorLight;
+  color: $errorDark;
+  box-shadow: $errorDark 0px 0px 0px 1px inset;
+  &:hover {
+    background-color: $error;
+    color: $primary;
+    box-shadow: $errorLight 0px 0px 0px 1px inset;
   }
 }
 

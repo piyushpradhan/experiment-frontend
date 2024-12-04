@@ -13,6 +13,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "design-system": "workspace:*",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -69,6 +70,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-tsconfig-paths": "^5.0.1",
-    "eslint-config-showoff": "workspace:*"
+    "eslint-config-showoff": "workspace:*",
+    "sass": "^1.79.5"
   }
 }
