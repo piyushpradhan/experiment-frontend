@@ -3,14 +3,20 @@ import { useSelector } from 'react-redux'
 
 import MessageComponent from '@messaging/components/Message/ChatBlock'
 
-import { getMessagesById, getActiveChannel } from '@messaging/store/selectors'
+import {
+  getMessagesById,
+  getActiveChannelDetails,
+  getSelectedSource,
+} from '@messaging/store/selectors'
 
 import type { AppState } from '@messaging/types'
-import { useSocket } from '@messaging/store/hooks'
+import { useKafka, useSocket } from '@messaging/store/hooks'
 import { messageTimestampComparator } from '@messaging/lib/utils'
+import SourceToggle from './SourceToggle'
 
 const Messages = () => {
   const { loadMoreMessages, isLoading } = useSocket()
+  const { joinChannel } = useKafka()
 
   const endOfMessagesRef = useRef<HTMLDivElement>(null)
   const messageContainerRef = useRef<HTMLDivElement>(null)
@@ -21,7 +27,10 @@ const Messages = () => {
 
   const messagesById = useSelector((state: AppState) => getMessagesById(state))
   const activeChannel = useSelector((state: AppState) =>
-    getActiveChannel(state)
+    getActiveChannelDetails(state)
+  )
+  const selectedSource = useSelector((state: AppState) =>
+    getSelectedSource(state)
   )
 
   const messages = useMemo(
@@ -42,7 +51,10 @@ const Messages = () => {
       messageContainerRef.current.scrollTop =
         messageContainerRef.current.scrollHeight
     }
-  }, [activeChannel])
+    if (selectedSource === 'kafka') {
+      joinChannel(activeChannel.id)
+    }
+  }, [activeChannel?.id])
 
   // Maintain scroll position after loading more messages
   useEffect(() => {
@@ -66,10 +78,10 @@ const Messages = () => {
       // Load more messages if at the top
       if (scrollTop === 0 && !isLoading) {
         previousScrollHeightRef.current = scrollHeight
-        loadMoreMessages(activeChannel)
+        loadMoreMessages(activeChannel?.id)
       }
     }
-  }, [loadMoreMessages, activeChannel, isLoading])
+  }, [loadMoreMessages, activeChannel?.id, isLoading])
 
   useEffect(() => {
     const container = messageContainerRef.current
@@ -80,19 +92,25 @@ const Messages = () => {
   }, [handleScroll])
 
   return (
-    <div
-      ref={messageContainerRef}
-      className="h-full overflow-y-scroll flex flex-col"
-    >
-      <div className="flex flex-col flex-1 justify-end flex-grow gap-2 pt-2 px-2">
-        {messages.map((message) => (
-          <MessageComponent
-            key={`${message.id}-${Math.random()}`}
-            message={message}
-            uid={`${activeUser}`}
-          />
-        ))}
-        <div ref={endOfMessagesRef}></div>
+    <div className="h-full overflow-hidden">
+      <div className="bg-white p-4 w-full shadow-border shadow-sm flex items-center justify-between">
+        <span className="font-semibold text-xl">{activeChannel?.name}</span>
+        <SourceToggle />
+      </div>
+      <div
+        ref={messageContainerRef}
+        className="overflow-y-auto flex flex-col h-full"
+      >
+        <div className="flex flex-col justify-end flex-grow gap-2 pt-2 px-2 pb-16">
+          {messages.map((message) => (
+            <MessageComponent
+              key={`${message.id}-${Math.random()}`}
+              message={message}
+              uid={`${activeUser}`}
+            />
+          ))}
+          <div ref={endOfMessagesRef}></div>
+        </div>
       </div>
     </div>
   )
