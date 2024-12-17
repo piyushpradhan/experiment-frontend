@@ -18,6 +18,13 @@ export const getChannelDetails = createSelector(
   }
 )
 
+export const getActiveChannelDetails = createSelector(
+  [getActiveChannel, getAllChannelDetails],
+  (activeChannel, channelDetails) => {
+    return channelDetails[activeChannel]
+  }
+)
+
 export const getSortedChannels = createSelector(
   [getAllChannels, getAllChannelDetails],
   (allChannels: string[], channelsById: ChannelsById) => {

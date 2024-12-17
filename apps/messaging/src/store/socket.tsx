@@ -11,18 +11,18 @@ import { useDispatch } from 'react-redux'
 import {
   loadMoreMessages as loadMoreMessagesAction,
   setChannels,
-} from '../store/actions'
+} from '@messaging/store/actions'
 
 import type { AppState, Channel, MessageSocketResponse } from '@messaging/types'
 import { setChannelMessages, setSingleMessageDetails } from './actions/message'
-import { getSocket } from './utils'
+import { getSocket } from '@messaging/store/utils'
 import { Socket } from 'socket.io-client'
 import { useSelector } from 'react-redux'
-import { getActiveChannel } from './selectors'
+import { getActiveChannel, getSelectedSource } from '@messaging/store/selectors'
 
 interface SocketContextProps {
   isLoading: boolean
-  socket: Socket
+  socket: Socket | null
   joinChannel: (channelId: string) => void
   sendMessage: (
     inputRef: RefObject<HTMLInputElement>,
@@ -41,7 +41,10 @@ export const SocketContext = createContext<SocketContextProps | undefined>(
 )
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const socket = getSocket()
+  const selectedSource = useSelector((state: AppState) =>
+    getSelectedSource(state)
+  )
+  const socket = getSocket(selectedSource)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const [hasMoreMessages, setHasMoreMessages] = useState(true)
@@ -53,6 +56,13 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     getActiveChannel(state)
   )
 
+  // Disconnect socket when the source is changed
+  useEffect(() => {
+    if (selectedSource !== 'socket') {
+      socket?.disconnect()
+    }
+  }, [selectedSource])
+
   useEffect(() => {
     setHasMoreMessages(true)
     offset.current = 0
@@ -60,72 +70,72 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [activeChannel])
 
   useEffect(() => {
-    const handleChannelMessages = (data: {
-      messages: MessageSocketResponse[]
-      channelId: string
-    }) => {
-      if (data.channelId === null) return
+    if (socket) {
+      const handleChannelMessages = (data: {
+        messages: MessageSocketResponse[]
+        channelId: string
+      }) => {
+        if (data.channelId === null) return
 
-      dispatch(setChannelMessages(data.messages, data.channelId))
+        dispatch(setChannelMessages(data.messages, data.channelId))
 
-      if (
-        data.channelId === activeChannel &&
-        data.messages.length > 0 &&
-        initialChannelLoad.current
-      ) {
-        offset.current += limit
-        initialChannelLoad.current = false
-      }
-
-      console.log({ data })
-
-      data.messages.map((message) => {
-        if (message.tagged_message) {
-          socket.emit('requestSingleMessage', message.tagged_message)
+        if (
+          data.channelId === activeChannel &&
+          data.messages.length > 0 &&
+          initialChannelLoad.current
+        ) {
+          offset.current += limit
+          initialChannelLoad.current = false
         }
-      })
-    }
 
-    const handleChannels = (data: Channel[]) => {
-      dispatch(setChannels(data))
-    }
-
-    const handleMoreChannelMessages = (data: {
-      messages: MessageSocketResponse[]
-      channelId: string
-    }) => {
-      if (data.channelId === null) return
-
-      dispatch(loadMoreMessagesAction(data.messages, data.channelId))
-    }
-
-    const handleMessageDetails = (message: MessageSocketResponse) => {
-      if (message) {
-        dispatch(setSingleMessageDetails(message))
+        data.messages.map((message) => {
+          if (message.tagged_message) {
+            socket.emit('requestSingleMessage', message.tagged_message)
+          }
+        })
       }
-    }
 
-    socket.on('connect', () => {
-      socket.emit('join')
-    })
+      const handleChannels = (data: Channel[]) => {
+        dispatch(setChannels(data))
+      }
 
-    socket.on('channelMessages', handleChannelMessages)
-    socket.on('channels', handleChannels)
-    socket.on('moreChannelMessages', handleMoreChannelMessages)
-    socket.on('singleMessage', handleMessageDetails)
+      const handleMoreChannelMessages = (data: {
+        messages: MessageSocketResponse[]
+        channelId: string
+      }) => {
+        if (data.channelId === null) return
 
-    return () => {
-      socket.off('channels')
-      socket.off('message')
-      socket.off('channelMessages')
-      socket.off('moreChannelMessages')
-      socket.off('singleMessage')
+        dispatch(loadMoreMessagesAction(data.messages, data.channelId))
+      }
+
+      const handleMessageDetails = (message: MessageSocketResponse) => {
+        if (message) {
+          dispatch(setSingleMessageDetails(message))
+        }
+      }
+
+      socket.on('connect', () => {
+        socket.emit('join')
+      })
+
+      socket.on('channelMessages', handleChannelMessages)
+      socket.on('channels', handleChannels)
+      socket.on('moreChannelMessages', handleMoreChannelMessages)
+      socket.on('singleMessage', handleMessageDetails)
+
+      return () => {
+        socket.off('channels')
+        socket.off('message')
+        socket.off('channelMessages')
+        socket.off('moreChannelMessages')
+        socket.off('singleMessage')
+      }
     }
   }, [activeChannel])
 
   const loadMoreMessages = useCallback(() => {
     try {
-      if (loading || !hasMoreMessages) return
+      if (loading || !hasMoreMessages || !socket) return
 
       setLoading(true)
       socket.emit('loadMoreMessages', {
@@ -142,7 +152,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const joinChannel = useCallback((channelId: string) => {
     try {
-      socket.emit('joinChannel', channelId)
+      if (socket) {
+        socket.emit('joinChannel', channelId)
+      }
     } catch (err) {
       console.error(err)
     }
@@ -150,10 +162,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const deleteMessage = useCallback(() => {
     try {
-      socket.emit('deleteMessage', {
-        channelId: '1234',
-        sender: '876542',
-      })
+      if (socket) {
+        socket.emit('deleteMessage', {
+          channelId: '1234',
+          sender: '876542',
+        })
+      }
     } catch (err) {
       console.error(err)
     }
@@ -166,7 +180,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       sender: string | null,
       taggedMessage: string | null = null
     ) => {
-      if (inputRef.current && sender) {
+      if (inputRef.current && sender && socket) {
         try {
           const value = inputRef.current.value
           socket.emit('message', {
@@ -187,7 +201,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const createChannel = useCallback((channelName: string) => {
     try {
-      if (channelName.length > 0) {
+      if (channelName.length > 0 && socket) {
         socket.emit('createChannel', {
           name: channelName,
         })
@@ -199,7 +213,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   const deleteChannel = useCallback((channelId: string) => {
     try {
-      if (channelId) {
+      if (channelId && socket) {
         socket.emit('deleteChannel', {
           channelId,
         })

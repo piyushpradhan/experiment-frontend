@@ -7,11 +7,12 @@ import { Button } from '@messaging/components/ui/button'
 import JoinModal from '@messaging/components/MessageInput/JoinModal'
 import TaggedMessage from '@messaging/components/MessageInput/TaggedMessage'
 
-import { useSocket } from '@messaging/store/hooks'
+import { useKafka, useSocket } from '@messaging/store/hooks'
 import { tagMessage } from '@messaging/store/actions'
 import {
   getActiveChannel,
   getActiveUser,
+  getSelectedSource,
   getTaggedMessageId,
 } from '@messaging/store/selectors'
 
@@ -19,29 +20,40 @@ import type { AppState } from '@messaging/types'
 
 const MessageInput = () => {
   const dispatch = useDispatch()
-  const { sendMessage } = useSocket()
+  const { sendMessage: sendSocketMessage } = useSocket()
+  const { sendMessage: sendKafkaMessage } = useKafka()
   const inputRef = useRef<HTMLInputElement>(null)
 
   const activeUser = useSelector((state: AppState) => getActiveUser(state))
   const activeChannel = useSelector((state: AppState) =>
     getActiveChannel(state)
   )
-
   const taggedMessageId = useSelector((state: AppState) =>
     getTaggedMessageId(state)
+  )
+  const selectedSource = useSelector((state: AppState) =>
+    getSelectedSource(state)
   )
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (inputRef.current) {
-        sendMessage(inputRef, activeChannel, activeUser, taggedMessageId)
+        handleSendMessage()
         dispatch(tagMessage(null))
       }
     }
   }
 
   const handleSendMessage = () => {
-    sendMessage(inputRef, activeChannel, activeUser)
+    if (selectedSource === 'kafka') {
+      sendKafkaMessage(inputRef, activeChannel, activeUser, taggedMessageId)
+    } else {
+      sendSocketMessage(inputRef, activeChannel, activeUser, taggedMessageId)
+    }
+    dispatch(tagMessage(null))
+    if (inputRef.current) {
+      inputRef.current.value = ""
+    }
   }
 
   return (

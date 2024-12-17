@@ -1,6 +1,7 @@
 import * as fromChannel from './channel'
 import * as fromMessage from './message'
 import * as fromUser from './user'
+import * as fromSource from './source'
 
 import type { AppState } from '@messaging/types'
 
@@ -10,6 +11,8 @@ export const getAllChannels = (state: AppState) =>
   fromChannel.getAllChannels(state.channel)
 export const getAllChannelDetails = (state: AppState) =>
   fromChannel.getAllChannelDetails(state.channel)
+export const getActiveChannelDetails = (state: AppState) =>
+  fromChannel.getActiveChannelDetails(state.channel)
 export const getChannelDetails = (state: AppState, channelId: string) =>
   fromChannel.getChannelDetails(state.channel, channelId)
 export const getLatestChannel = (state: AppState) =>
@@ -38,3 +41,6 @@ export const getUserDetails = (state: AppState, uid: string) =>
   fromUser.getUserDetails(state.user, uid)
 export const getActiveUser = (state: AppState) =>
   fromUser.getActiveUser(state.user)
+
+export const getSelectedSource = (state: AppState) =>
+  fromSource.getSelectedSource(state.source)

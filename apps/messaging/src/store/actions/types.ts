@@ -1,4 +1,4 @@
-import { MessageSocketResponse, User } from '@messaging/types'
+import { MessageSocketResponse, Source, User } from '@messaging/types'
 
 export type SetChannelMessagesPayload = {
   messages: MessageSocketResponse[]
@@ -26,4 +26,8 @@ export type UpdateAllUsersPayload = {
 
 export type SetActiveUserPayload = {
   user: string
+}
+
+export type SetSourcePayload = {
+  source: Source
 }

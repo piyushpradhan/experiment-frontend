@@ -18,6 +18,8 @@ export type MessagesById = {
 
 export type TaggedMessage = string | null
 
+export type Source = 'kafka' | 'socket'
+
 export type MessagesState = {
   taggedMessage: TaggedMessage
   byId: MessagesById
@@ -81,4 +83,5 @@ export type AppState = {
   tab: TabState
   message: MessagesState
   user: UserState
+  source: Source
 }
