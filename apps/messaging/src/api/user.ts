@@ -1,4 +1,4 @@
-const backendUrl = import.meta.env.VITE_BACKEND_URL
+import { backendUrl } from '@messaging/lib/utils'
 
 export const createUser = async (name: string, email: string) => {
   try {

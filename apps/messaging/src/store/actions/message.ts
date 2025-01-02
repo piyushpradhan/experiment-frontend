@@ -17,6 +17,17 @@ export const setChannelMessages = (
   },
 })
 
+export const updateLatestMessage = (
+  message: MessageSocketResponse,
+  channelId: string
+) => ({
+  type: 'UPDATE_LATEST_MESSAGE',
+  payload: {
+    message,
+    channelId,
+  },
+})
+
 export const tagMessage = (
   messageId: string | null
 ): Action<string, TagMessagePayload> => ({

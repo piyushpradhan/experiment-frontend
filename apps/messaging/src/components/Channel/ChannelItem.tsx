@@ -1,11 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux'
 
-import { setActiveChannel } from '@messaging/store/actions'
-import { getChannelDetails, getActiveChannel } from '@messaging/store/selectors'
+import { setActiveChannel, setChannelMessages } from '@messaging/store/actions'
+import {
+  getChannelDetails,
+  getActiveChannel,
+  getSelectedSource,
+} from '@messaging/store/selectors'
 
 import type { Channel, AppState } from '@messaging/types'
 import ChannelDropdown from './ChannelDropdown'
-import { useSocket } from '@messaging/store/hooks'
+import { useKafka, useSocket } from '@messaging/lib/hooks/sources'
+import { fetchChannelMessages } from '@messaging/api/messages'
 
 type Props = {
   channelId: string
@@ -14,17 +19,28 @@ type Props = {
 const Channel = ({ channelId }: Props) => {
   const dispatch = useDispatch()
   const { joinChannel } = useSocket()
+  const { handleChannelMessages } = useKafka()
   const channel = useSelector((state: AppState) =>
     getChannelDetails(state, channelId)
+  )
+  const selectedSource = useSelector((state: AppState) =>
+    getSelectedSource(state)
   )
 
   const activeChannel = useSelector((state: AppState) =>
     getActiveChannel(state)
   )
 
-  const handleJoinChannel = () => {
+  const handleJoinChannel = async () => {
     joinChannel(channelId)
     dispatch(setActiveChannel(channelId))
+
+    if (selectedSource === 'kafka') {
+      const response = await fetchChannelMessages(channelId)
+      dispatch(setChannelMessages(response.messages, response.channelId))
+
+      handleChannelMessages(response)
+    }
   }
 
   return (

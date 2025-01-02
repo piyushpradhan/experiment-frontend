@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useCallback,
-  RefObject,
-  createContext,
-  useState,
-  useRef,
-} from 'react'
+import { useEffect, useCallback, RefObject, createContext } from 'react'
 import { useDispatch } from 'react-redux'
 
 import {
@@ -19,6 +12,7 @@ import { getSocket } from '@messaging/store/utils'
 import { Socket } from 'socket.io-client'
 import { useSelector } from 'react-redux'
 import { getActiveChannel, getSelectedSource } from '@messaging/store/selectors'
+import useLoadMessages from '@messaging/lib/hooks/useLoadMessages'
 
 interface SocketContextProps {
   isLoading: boolean
@@ -46,11 +40,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   )
   const socket = getSocket(selectedSource)
   const dispatch = useDispatch()
-  const [loading, setLoading] = useState(false)
-  const [hasMoreMessages, setHasMoreMessages] = useState(true)
-  const offset = useRef<number>(0)
-  const initialChannelLoad = useRef<boolean>(true)
-  const limit = 30 // batch size
+  const { limit, initialChannelLoad, loading, offset, loadMoreMessages } =
+    useLoadMessages()
 
   const activeChannel = useSelector((state: AppState) =>
     getActiveChannel(state)
@@ -64,13 +55,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [selectedSource])
 
   useEffect(() => {
-    setHasMoreMessages(true)
-    offset.current = 0
-    initialChannelLoad.current = true
-  }, [activeChannel])
-
-  useEffect(() => {
-    if (socket) {
+    if (selectedSource === 'socket' && socket) {
       const handleChannelMessages = (data: {
         messages: MessageSocketResponse[]
         channelId: string
@@ -133,20 +118,15 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [activeChannel])
 
-  const loadMoreMessages = useCallback(() => {
-    try {
-      if (loading || !hasMoreMessages || !socket) return
-
-      setLoading(true)
-      socket.emit('loadMoreMessages', {
-        channelId: activeChannel,
-        offset: offset.current,
-        limit,
-      })
-
-      setLoading(false)
-    } catch (err) {
-      console.error(err)
+  const loadMoreSocketMessages = useCallback(() => {
+    if (selectedSource === 'socket' && socket) {
+      loadMoreMessages(() => {
+        socket.emit('loadMoreMessages', {
+          channelId: activeChannel,
+          offset: offset.current,
+          limit,
+        })
+      }, socket)
     }
   }, [activeChannel])
 
@@ -233,7 +213,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         deleteMessage,
         createChannel,
         deleteChannel,
-        loadMoreMessages,
+        loadMoreMessages: loadMoreSocketMessages,
       }}
     >
       {children}

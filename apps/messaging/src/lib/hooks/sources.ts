@@ -1,16 +1,6 @@
 import { useContext } from 'react'
-import {
-  useDispatch as useReduxDispatch,
-  useSelector as useReduxSelector,
-} from 'react-redux'
-
 import { SocketContext } from '@messaging/store/socket'
 import { KafkaContext } from '@messaging/store/kafka'
-
-import type { AppDispatch, RootState } from '.'
-
-export const useDispatch = useReduxDispatch.withTypes<AppDispatch>()
-export const useSelector = useReduxSelector.withTypes<RootState>()
 
 export const useSocket = () => {
   const context = useContext(SocketContext)

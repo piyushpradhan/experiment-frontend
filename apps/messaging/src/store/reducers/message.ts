@@ -55,6 +55,22 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
 
       return messagesById
     }
+    case 'UPDATE_LATEST_MESSAGE': {
+      const { payload }: { payload: any } = action
+      let updated = state
+      updated = {
+        ...state,
+        [payload.message.id]: {
+          id: payload.message.id,
+          sender: payload.message.sender,
+          contents: payload.message.contents,
+          timestamp: payload.message.timestamp,
+          channelId: payload.message.channel_id,
+          taggedMessage: payload.message.tagged_message,
+        },
+      }
+      return updated
+    }
     case atypes.SET_CHANNEL_MESSAGES: {
       const { payload }: Action<string, SetChannelMessagesPayload> =
         action as Action<string, SetChannelMessagesPayload>
@@ -95,6 +111,8 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
         },
       }
     }
+    case atypes.SET_ACTIVE_CHANNEL:
+      return {}
     default:
       return state
   }
@@ -102,6 +120,11 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
 
 const allMessages = (state: string[] = [], action: Action<string, unknown>) => {
   switch (action.type) {
+    case 'UPDATE_LATEST_MESSAGE': {
+      const { payload }: { payload: any } = action
+      const updated = [...state, payload?.message]
+      return updated
+    }
     case atypes.SET_CHANNEL_MESSAGES: {
       const { payload }: Action<string, SetChannelMessagesPayload> =
         action as Action<string, SetChannelMessagesPayload>
@@ -110,6 +133,8 @@ const allMessages = (state: string[] = [], action: Action<string, unknown>) => {
         []) as MessageSocketResponse[]
       return messages.map((message) => message.id)
     }
+    case atypes.SET_ACTIVE_CHANNEL:
+      return []
     default:
       return state
   }
