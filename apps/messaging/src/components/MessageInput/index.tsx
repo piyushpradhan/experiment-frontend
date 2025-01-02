@@ -7,7 +7,7 @@ import { Button } from '@messaging/components/ui/button'
 import JoinModal from '@messaging/components/MessageInput/JoinModal'
 import TaggedMessage from '@messaging/components/MessageInput/TaggedMessage'
 
-import { useKafka, useSocket } from '@messaging/store/hooks'
+import { useKafka, useSocket } from '@messaging/lib/hooks/sources'
 import { tagMessage } from '@messaging/store/actions'
 import {
   getActiveChannel,
@@ -52,7 +52,7 @@ const MessageInput = () => {
     }
     dispatch(tagMessage(null))
     if (inputRef.current) {
-      inputRef.current.value = ""
+      inputRef.current.value = ''
     }
   }
 

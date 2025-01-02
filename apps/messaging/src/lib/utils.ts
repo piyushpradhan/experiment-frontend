@@ -3,6 +3,8 @@ import { twMerge } from 'tailwind-merge'
 
 import type { Channel, Message } from '@messaging/types'
 
+export const backendUrl = import.meta.env.VITE_BACKEND_URL
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

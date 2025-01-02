@@ -10,13 +10,17 @@ import {
 } from '@messaging/store/selectors'
 
 import type { AppState } from '@messaging/types'
-import { useKafka, useSocket } from '@messaging/store/hooks'
+import { useKafka, useSocket } from '@messaging/lib/hooks/sources'
 import { messageTimestampComparator } from '@messaging/lib/utils'
 import SourceToggle from './SourceToggle'
 
 const Messages = () => {
-  const { loadMoreMessages, isLoading } = useSocket()
-  const { joinChannel } = useKafka()
+  const {
+    loadMoreMessages: loadSocketMoreMessages,
+    isLoading: isSocketLoading,
+  } = useSocket()
+  const { loadMoreMessages: loadKafkaMoreMessages, isLoading: isKafkaLoading } =
+    useKafka()
 
   const endOfMessagesRef = useRef<HTMLDivElement>(null)
   const messageContainerRef = useRef<HTMLDivElement>(null)
@@ -32,6 +36,11 @@ const Messages = () => {
   const selectedSource = useSelector((state: AppState) =>
     getSelectedSource(state)
   )
+
+  const loadMoreMessages =
+    selectedSource === 'kafka' ? loadKafkaMoreMessages : loadSocketMoreMessages
+  const isLoading =
+    selectedSource === 'kafka' ? isKafkaLoading : isSocketLoading
 
   const messages = useMemo(
     () => Object.values(messagesById).sort(messageTimestampComparator),
@@ -50,9 +59,6 @@ const Messages = () => {
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop =
         messageContainerRef.current.scrollHeight
-    }
-    if (selectedSource === 'kafka') {
-      joinChannel(activeChannel.id)
     }
   }, [activeChannel?.id])
 
@@ -93,15 +99,11 @@ const Messages = () => {
 
   return (
     <div className="h-full overflow-hidden">
-      <div className="bg-white p-4 w-full shadow-border shadow-sm flex items-center justify-between">
-        <span className="font-semibold text-xl">{activeChannel?.name}</span>
-        <SourceToggle />
-      </div>
       <div
         ref={messageContainerRef}
         className="overflow-y-auto flex flex-col h-full"
       >
-        <div className="flex flex-col justify-end flex-grow gap-2 pt-2 px-2 pb-16">
+        <div className="flex flex-col justify-end flex-grow gap-2 pt-2 px-2">
           {messages.map((message) => (
             <MessageComponent
               key={`${message.id}-${Math.random()}`}

@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu'
 
-import { useSocket } from '@messaging/store/hooks'
+import { useSocket } from '@messaging/lib/hooks/sources'
 
 type Props = {
   channelId: string

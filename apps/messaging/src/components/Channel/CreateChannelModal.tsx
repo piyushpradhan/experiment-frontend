@@ -13,7 +13,7 @@ import {
 } from '@messaging/components/ui/dialog'
 import { Input } from '@messaging/components/ui/input'
 import { Label } from '@messaging/components/ui/label'
-import { useSocket } from '@messaging/store/hooks'
+import { useSocket } from '@messaging/lib/hooks/sources'
 
 const CreateChannelModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
