@@ -28,6 +28,8 @@ const activeChannel = (
 
       if (!payload.channelId) return state
 
+      console.log({ payload })
+
       return payload.channelId
     }
     case atypes.SET_ACTIVE_CHANNEL:

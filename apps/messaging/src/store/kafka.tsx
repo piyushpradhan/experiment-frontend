@@ -1,15 +1,11 @@
-import React, { RefObject, createContext, useCallback, useEffect } from 'react'
+import React, { RefObject, createContext, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import {
-  loadMoreMessages as loadMoreMessagesAction,
-  setChannels,
-} from '@messaging/store/actions'
-import { setSingleMessageDetails } from '@messaging/store/actions/message'
+import { loadMoreMessages as loadMoreMessagesAction } from '@messaging/store/actions'
 import useLoadMessages from '@messaging/lib/hooks/useLoadMessages'
 import { fetchMoreMessages } from '@messaging/api/messages'
 import { useSelector } from 'react-redux'
-import { getActiveChannel, getSelectedSource } from '@messaging/store/selectors'
-import type { AppState, MessageSocketResponse, Channel } from '@messaging/types'
+import { getActiveChannel } from '@messaging/store/selectors'
+import type { AppState, MessageSocketResponse } from '@messaging/types'
 
 interface KafkaContextProps {
   isLoading: boolean
@@ -22,7 +18,7 @@ interface KafkaContextProps {
   deleteMessage: () => void
   createChannel: (channelName: string) => void
   deleteChannel: (channelId: string) => void
-  loadMoreMessages: (channelId: string) => void
+  loadMoreMessages: () => void
   handleChannelMessages: (data: {
     channelId: string
     messages: MessageSocketResponse[]
@@ -40,9 +36,6 @@ export const KafkaProvider = ({ children }: { children: React.ReactNode }) => {
   const { limit, initialChannelLoad, loading, offset, loadMoreMessages } =
     useLoadMessages()
 
-  const selectedSource = useSelector((state: AppState) => {
-    getSelectedSource(state)
-  })
   const activeChannel = useSelector((state: AppState) =>
     getActiveChannel(state)
   )
@@ -83,18 +76,18 @@ export const KafkaProvider = ({ children }: { children: React.ReactNode }) => {
 
     // dispatch(setChannelMessages(data.messages, data.channelId))
     console.log(
-      'Increasing offset: ',
-      offset.current,
+      'Not satisfying the condition: ',
+      data.channelId,
+      activeChannel,
       initialChannelLoad.current
     )
 
-    if (
-      data.channelId === activeChannel &&
-      data.messages.length > 0 &&
-      initialChannelLoad.current
-    ) {
+    // TODO: Check if the response is for the active channel
+    if (data.messages.length > 0 && initialChannelLoad.current) {
       offset.current += limit
       initialChannelLoad.current = false
+
+      console.log('Increasing: ', offset.current)
     }
 
     // TODO: Get tagged message details
@@ -105,18 +98,6 @@ export const KafkaProvider = ({ children }: { children: React.ReactNode }) => {
     })
   }
 
-  useEffect(() => {
-    const handleChannels = (data: Channel[]) => {
-      dispatch(setChannels(data))
-    }
-
-    const handleMessageDetails = (message: MessageSocketResponse) => {
-      if (message) {
-        dispatch(setSingleMessageDetails(message))
-      }
-    }
-  }, [activeChannel, selectedSource])
-
   const handleMoreChannelMessages = (data: {
     messages: MessageSocketResponse[]
     channelId: string
@@ -126,7 +107,9 @@ export const KafkaProvider = ({ children }: { children: React.ReactNode }) => {
     dispatch(loadMoreMessagesAction(data.messages, data.channelId))
   }
 
-  const loadMoreKafkaMessages = () => {
+  console.log('Outside the function: ', offset.current)
+
+  const loadMoreKafkaMessages = useCallback(() => {
     loadMoreMessages(async () => {
       const response = await fetchMoreMessages(
         activeChannel,
@@ -138,7 +121,12 @@ export const KafkaProvider = ({ children }: { children: React.ReactNode }) => {
         channelId: response.channelId,
       })
     })
-  }
+  }, [
+    offset.current,
+    activeChannel,
+    handleMoreChannelMessages,
+    loadMoreMessages,
+  ])
 
   const deleteMessage = useCallback(() => {}, [])
 
