@@ -27,7 +27,7 @@ interface SocketContextProps {
   deleteMessage: () => void
   createChannel: (channelName: string) => void
   deleteChannel: (channelId: string) => void
-  loadMoreMessages: (channelId: string) => void
+  loadMoreMessages: () => void
 }
 
 export const SocketContext = createContext<SocketContextProps | undefined>(

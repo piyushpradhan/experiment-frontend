@@ -12,7 +12,6 @@ import {
 import type { AppState } from '@messaging/types'
 import { useKafka, useSocket } from '@messaging/lib/hooks/sources'
 import { messageTimestampComparator } from '@messaging/lib/utils'
-import SourceToggle from './SourceToggle'
 
 const Messages = () => {
   const {
@@ -84,7 +83,7 @@ const Messages = () => {
       // Load more messages if at the top
       if (scrollTop === 0 && !isLoading) {
         previousScrollHeightRef.current = scrollHeight
-        loadMoreMessages(activeChannel?.id)
+        loadMoreMessages()
       }
     }
   }, [loadMoreMessages, activeChannel?.id, isLoading])
