@@ -1,0 +1,19 @@
+{
+  "buildCommand": "pnpm turbo build",
+  "installCommand": "pnpm install",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/messaging/:path*",
+      "destination": "/messaging"
+    },
+    {
+      "source": "/collaboration/:path*",
+      "destination": "/collaboration"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
