@@ -54,13 +54,6 @@ const Messages = () => {
     }
   }, [messages])
 
-  useEffect(() => {
-    if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop =
-        messageContainerRef.current.scrollHeight
-    }
-  }, [activeChannel?.id])
-
   // Maintain scroll position after loading more messages
   useEffect(() => {
     if (messageContainerRef.current && previousScrollHeightRef.current > 0) {

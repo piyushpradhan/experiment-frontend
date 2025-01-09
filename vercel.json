@@ -5,15 +5,15 @@
   "rewrites": [
     {
       "source": "/messaging/:path*",
-      "destination": "/messaging"
+      "destination": "/index.html"
     },
     {
       "source": "/collaboration/:path*",
-      "destination": "/collaboration"
+      "destination": "/index.html"
     },
     {
       "source": "/(.*)",
-      "destination": "/"
+      "destination": "/index.html"
     }
   ]
 }
