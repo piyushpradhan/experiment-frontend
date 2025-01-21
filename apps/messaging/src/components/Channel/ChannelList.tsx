@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import Channel from '@messaging/components/Channel/ChannelItem.tsx'
@@ -8,7 +7,7 @@ import { getAllChannels, getSortedChannels } from '@messaging/store/selectors'
 import type { AppState } from '@messaging/types'
 import NoChannels from './NoChannels'
 
-const ChannelList = memo(() => {
+const ChannelList = () => {
   const channels = useSelector((state: AppState) => getAllChannels(state))
   const sortedChannels = useSelector((state: AppState) =>
     getSortedChannels(state)
@@ -21,6 +20,6 @@ const ChannelList = memo(() => {
   return sortedChannels.map((channel: Channel) => (
     <Channel key={channel.id} channelId={channel.id} />
   ))
-})
+}
 
 export default ChannelList

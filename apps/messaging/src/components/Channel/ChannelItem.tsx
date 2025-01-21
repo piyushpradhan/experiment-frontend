@@ -32,6 +32,9 @@ const Channel = ({ channelId }: Props) => {
   )
 
   const handleJoinChannel = async () => {
+    // Do nothing if the user clicks on the active channel
+    if (activeChannel === channelId) return
+
     joinChannel(channelId)
     dispatch(setActiveChannel(channelId))
 

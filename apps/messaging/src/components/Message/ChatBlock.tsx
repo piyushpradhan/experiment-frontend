@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import MessageDropdown from '@messaging/components/Message/MessageDropdown'
@@ -64,4 +65,9 @@ const ChatBlock = ({ message, uid }: Props) => {
   )
 }
 
-export default ChatBlock
+export default memo(ChatBlock, (prev, next) => {
+  return (
+    prev.message.id === next.message.id &&
+    prev.message.contents === next.message.contents
+  )
+})
