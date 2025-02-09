@@ -35,24 +35,30 @@ const MessageInput = () => {
     getSelectedSource(state)
   )
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+  const handleSendMessage = (e?: React.FormEvent) => {
+    e?.preventDefault()
+
+    if (inputRef.current?.value.trim()) {
+      if (selectedSource === 'kafka') {
+        console.log('Triggering Kafka')
+        sendKafkaMessage(inputRef, activeChannel, activeUser, taggedMessageId)
+      } else {
+        console.log('Triggering socket')
+        sendSocketMessage(inputRef, activeChannel, activeUser, taggedMessageId)
+      }
+
+      dispatch(tagMessage(null))
       if (inputRef.current) {
-        handleSendMessage()
-        dispatch(tagMessage(null))
+        inputRef.current.value = ''
       }
     }
   }
 
-  const handleSendMessage = () => {
-    if (selectedSource === 'kafka') {
-      sendKafkaMessage(inputRef, activeChannel, activeUser, taggedMessageId)
-    } else {
-      sendSocketMessage(inputRef, activeChannel, activeUser, taggedMessageId)
-    }
-    dispatch(tagMessage(null))
-    if (inputRef.current) {
-      inputRef.current.value = ''
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      console.log('Triggered once')
+      handleSendMessage()
     }
   }
 
@@ -62,17 +68,20 @@ const MessageInput = () => {
       {!activeUser ? (
         <JoinModal />
       ) : (
-        <div className="flex w-full items-center space-x-2">
+        <form
+          onSubmit={handleSendMessage}
+          className="flex w-full items-center space-x-2"
+        >
           <Input
             ref={inputRef}
-            type="email"
+            type="text"
             placeholder="Type your message..."
             onKeyDown={handleKeyDown}
           />
-          <Button type="submit" className="p-4" onClick={handleSendMessage}>
+          <Button type="submit" className="p-4">
             <Send className="w-4" />
           </Button>
-        </div>
+        </form>
       )}
     </div>
   )
