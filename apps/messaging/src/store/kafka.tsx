@@ -75,19 +75,11 @@ export const KafkaProvider = ({ children }: { children: React.ReactNode }) => {
     if (data.channelId === null) return
 
     // dispatch(setChannelMessages(data.messages, data.channelId))
-    console.log(
-      'Not satisfying the condition: ',
-      data.channelId,
-      activeChannel,
-      initialChannelLoad.current
-    )
 
     // TODO: Check if the response is for the active channel
     if (data.messages.length > 0 && initialChannelLoad.current) {
       offset.current += limit
       initialChannelLoad.current = false
-
-      console.log('Increasing: ', offset.current)
     }
 
     // TODO: Get tagged message details
@@ -106,8 +98,6 @@ export const KafkaProvider = ({ children }: { children: React.ReactNode }) => {
 
     dispatch(loadMoreMessagesAction(data.messages, data.channelId))
   }
-
-  console.log('Outside the function: ', offset.current)
 
   const loadMoreKafkaMessages = useCallback(() => {
     loadMoreMessages(async () => {

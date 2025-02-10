@@ -40,10 +40,8 @@ const MessageInput = () => {
 
     if (inputRef.current?.value.trim()) {
       if (selectedSource === 'kafka') {
-        console.log('Triggering Kafka')
         sendKafkaMessage(inputRef, activeChannel, activeUser, taggedMessageId)
       } else {
-        console.log('Triggering socket')
         sendSocketMessage(inputRef, activeChannel, activeUser, taggedMessageId)
       }
 
@@ -57,7 +55,6 @@ const MessageInput = () => {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      console.log('Triggered once')
       handleSendMessage()
     }
   }
