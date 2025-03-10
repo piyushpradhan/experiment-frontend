@@ -111,8 +111,6 @@ const byId = (state: MessagesById = {}, action: Action<string, unknown>) => {
         },
       }
     }
-    case atypes.SET_ACTIVE_CHANNEL:
-      return {}
     default:
       return state
   }
