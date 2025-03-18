@@ -23,8 +23,6 @@ const useLoadMessages = () => {
     initialChannelLoad.current = true
   }, [activeChannel, selectedSource])
 
-  useEffect(() => {}, [activeChannel, selectedSource])
-
   const loadMoreMessages = useCallback(
     (callback: () => void, socket?: Socket) => {
       try {

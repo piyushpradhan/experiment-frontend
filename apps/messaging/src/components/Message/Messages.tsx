@@ -48,34 +48,41 @@ const Messages = () => {
 
   // Scroll to the bottom on initial load
   useEffect(() => {
-    endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [activeChannel.id, messages, messageContainerRef.current?.scrollHeight])
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight
+    }
+  }, [
+    activeChannel?.id,
+    messages.length,
+    messageContainerRef.current?.scrollHeight,
+  ])
 
   // Maintain scroll position after loading more messages
-  // useEffect(() => {
-  //   if (messageContainerRef.current && previousScrollHeightRef.current > 0) {
-  //     const newScrollHeight = messageContainerRef.current.scrollHeight
-  //     const scrollDiff = newScrollHeight - previousScrollHeightRef.current
-  //     messageContainerRef.current.scrollTop = scrollDiff
-  //     previousScrollHeightRef.current = 0 // Reset for next load
-  //   }
-  // }, [messages])
+  useEffect(() => {
+    if (messageContainerRef.current && previousScrollHeightRef.current > 0) {
+      const newScrollHeight = messageContainerRef.current.scrollHeight
+      const scrollDiff = newScrollHeight - previousScrollHeightRef.current
+      messageContainerRef.current.scrollTop = scrollDiff
+      previousScrollHeightRef.current = 0
+    }
+  }, [messages])
 
   const handleScroll = useCallback(() => {
-    //   if (messageContainerRef.current) {
-    //     const { scrollTop, clientHeight, scrollHeight } =
-    //       messageContainerRef.current
-    //
-    //     // Check if the user is at the bomttom
-    //     isScrolledToBottomRef.current =
-    //       scrollTop + clientHeight >= scrollHeight - 1
-    //
-    //     // Load more messages if at the top
-    //     if (scrollTop === 0 && !isLoading) {
-    //       previousScrollHeightRef.current = scrollHeight
-    //       loadMoreMessages()
-    //     }
-    //   }
+    if (messageContainerRef.current) {
+      const { scrollTop, clientHeight, scrollHeight } =
+        messageContainerRef.current
+
+      // Check if the user is at the bomttom
+      isScrolledToBottomRef.current =
+        scrollTop + clientHeight >= scrollHeight - 1
+
+      // Load more messages if at the top
+      if (scrollTop === 0 && !isLoading) {
+        previousScrollHeightRef.current = scrollHeight
+        loadMoreMessages()
+      }
+    }
   }, [loadMoreMessages, activeChannel?.id, isLoading])
 
   useEffect(() => {
