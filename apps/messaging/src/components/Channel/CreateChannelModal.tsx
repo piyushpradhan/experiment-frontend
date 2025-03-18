@@ -1,6 +1,6 @@
 import { SquarePen } from 'lucide-react'
 
-import { ChangeEvent, useState, useCallback } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { Button } from '@messaging/components/ui/button'
 import {
   Dialog,
@@ -16,7 +16,6 @@ import { Label } from '@messaging/components/ui/label'
 import { useSocket } from '@messaging/lib/hooks/sources'
 
 const CreateChannelModal = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [channelName, setChannelName] = useState<string>('')
   const { createChannel } = useSocket()
 
@@ -24,29 +23,19 @@ const CreateChannelModal = () => {
     setChannelName(e.currentTarget.value)
   }
 
-  const handleOpenModal = useCallback(() => {
-    setIsModalOpen(true)
-  }, [])
-
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false)
-  }, [])
-
-  const handleCreateChannel = (e: unknown) => {
-    // @ts-expect-error - e represents both onSubmit and onClick
-    e.preventDefault()
-    createChannel(channelName)
-    setIsModalOpen(false)
-    setChannelName('')
+  const handleCreateChannel = () => {
+    if (channelName.trim().length > 0) {
+      createChannel(channelName)
+      setChannelName('')
+    }
   }
 
   return (
-    <Dialog open={isModalOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button
           variant="outline"
           className="px-2 py-2 hover:bg-gray-100 rounded-md cursor-pointer"
-          onClick={handleOpenModal}
         >
           <SquarePen size={20} />
         </Button>
@@ -74,15 +63,12 @@ const CreateChannelModal = () => {
           <DialogClose asChild>
             <Button
               type="button"
-              variant="secondary"
-              onClick={handleCloseModal}
+              variant="default"
+              onClick={handleCreateChannel}
             >
-              Cancel
+              Create
             </Button>
           </DialogClose>
-          <Button type="button" variant="default" onClick={handleCreateChannel}>
-            Create
-          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
