@@ -10,6 +10,8 @@
     "build": "turbo run build",
     "build:main": "turbo run build --filter=main...",
     "build:docs": "turbo run build --filter=docs...",
+    "build:apps": "turbo run build --filter=@experiment/messaging-app --filter=@experiment/collaboration-app",
+    "build:host": "turbo run build --filter=host",
     "dev": "turbo run dev",
     "start": "turbo run start",
     "clean": "turbo run clean && rm -rf node_modules",

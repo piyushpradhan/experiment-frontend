@@ -8,8 +8,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@messaging': path.resolve(__dirname, '../messaging/src'),
-      '@collaboration': path.resolve(__dirname, '../collaboration/src'),
     },
   },
 })

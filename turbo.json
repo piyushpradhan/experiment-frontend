@@ -15,6 +15,10 @@
       "dependsOn": ["^build", "$DOCS_URL"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
+    "host#build": {
+      "dependsOn": ["messaging#build", "collaboration#build"],
+      "outputs": ["dist/**"]
+    },
     "test": {
       "dependsOn": ["^build"],
       "outputs": []

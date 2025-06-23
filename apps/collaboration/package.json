@@ -1,8 +1,16 @@
 {
-  "name": "collaboration",
+  "name": "@experiment/collaboration-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "dev": "vite --port 5175",
     "build": "tsc -b && vite build",

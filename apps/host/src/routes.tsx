@@ -2,10 +2,9 @@ import { lazy } from 'react'
 import { createBrowserRouter, redirect } from 'react-router-dom'
 import Home from '@/pages/Home'
 
-// eslint-disable-next-line react-refresh/only-export-components
-const Messaging = lazy(() => import('@messaging/App'))
-// eslint-disable-next-line react-refresh/only-export-components
-const Collaboration = lazy(() => import('@collaboration/index'))
+// Import apps as packages - enterprise standard approach
+const Messaging = lazy(() => import('@experiment/messaging-app'))
+const Collaboration = lazy(() => import('@experiment/collaboration-app'))
 
 export const router = createBrowserRouter([
   {

@@ -11,4 +11,22 @@ export default defineConfig({
       '@messaging': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    outDir: 'dist',
+    lib: {
+      entry: path.resolve(__dirname, 'src/index.ts'),
+      name: 'MessagingApp',
+      fileName: 'index',
+      formats: ['es']
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM'
+        }
+      }
+    }
+  }
 })
