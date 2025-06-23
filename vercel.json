@@ -1,6 +1,6 @@
 {
-  "buildCommand": "pnpm turbo build --filter=host",
-  "installCommand": "pnpm install",
+  "buildCommand": "./vercel-build.sh",
+  "installCommand": "echo 'Dependencies will be installed in build script'",
   "outputDirectory": "apps/host/dist",
   "rewrites": [
     {
