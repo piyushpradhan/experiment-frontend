@@ -3,7 +3,7 @@ import { Loader } from 'shared-components'
 
 // Dynamic import of the collaboration app
 const CollaborationApp = React.lazy(
-  () => import('../../../collaboration/src/index')
+  () => import('@experiment/collaboration-app')
 )
 
 const Collaboration: React.FC = () => {

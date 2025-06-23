@@ -16,7 +16,7 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "host#build": {
-      "dependsOn": ["messaging#build", "collaboration#build"],
+      "dependsOn": ["@experiment/messaging-app#build", "@experiment/collaboration-app#build"],
       "outputs": ["dist/**"]
     },
     "test": {
