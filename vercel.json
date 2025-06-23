@@ -1,10 +1,18 @@
 {
-  "buildCommand": "pnpm turbo build",
+  "buildCommand": "pnpm turbo build --filter=host",
   "installCommand": "pnpm install",
-  "framework": "vite",
+  "outputDirectory": "apps/host/dist",
   "rewrites": [
     {
+      "source": "/messaging",
+      "destination": "/index.html"
+    },
+    {
       "source": "/messaging/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/collaboration",
       "destination": "/index.html"
     },
     {
@@ -14,6 +22,17 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }
